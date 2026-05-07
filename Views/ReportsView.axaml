@@ -1,0 +1,63 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:AirportFlightManagement.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1150" d:DesignHeight="840"
+             x:Class="AirportFlightManagement.Views.ReportsView"
+             x:DataType="vm:ReportsViewModel"
+             Padding="24">
+
+    <Grid ColumnDefinitions="250,*" RowDefinitions="auto,*" ColumnSpacing="16" RowSpacing="16">
+        <TextBlock Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Text="Reports &amp; Export" FontSize="28" FontWeight="Bold" Foreground="#FFFFFF"/>
+
+        <!-- Report Types List -->
+        <Border Grid.Column="0" Grid.Row="1" Classes="card">
+            <ListBox ItemsSource="{Binding ReportOptions}" SelectedItem="{Binding SelectedReport}" Padding="0">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border Padding="16" Background="Transparent" Cursor="Hand">
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="{Binding Title}" FontWeight="Bold" Foreground="#FFFFFF"/>
+                                <TextBlock Text="{Binding Description}" FontSize="11" Foreground="#8B8B8B"/>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Border>
+
+        <!-- Preview Panel -->
+        <Border Grid.Column="1" Grid.Row="1" Classes="card" IsVisible="{Binding SelectedReport, Converter={x:Static ObjectConverters.IsNotNull}}">
+            <StackPanel Spacing="16" Margin="16">
+                <TextBlock Text="{Binding SelectedReport.Title}" FontSize="18" FontWeight="Bold" Foreground="#FFFFFF"/>
+
+                <!-- Destination Filter (for Average Price report) -->
+                <StackPanel Spacing="8" IsVisible="{Binding ShowDestinationInput}">
+                    <Label Content="Select Destination" FontWeight="Bold"/>
+                    <ComboBox SelectedItem="{Binding SelectedDestination}" ItemsSource="{Binding AvailableDestinations}"/>
+                    <Button Content="Load Data" Classes="primary" Command="{Binding RefreshPreviewCommand}"/>
+                </StackPanel>
+
+                <!-- Preview Table -->
+                <DataGrid ItemsSource="{Binding PreviewData}" IsReadOnly="True" ColumnHeaderHeight="35" RowHeight="40">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Code" Binding="{Binding FlightCode}" Width="80"/>
+                        <DataGridTextColumn Header="Destination" Binding="{Binding Destination}" Width="120"/>
+                        <DataGridTextColumn Header="Day" Binding="{Binding DayName}" Width="100"/>
+                        <DataGridTextColumn Header="Departure" Binding="{Binding DepartureTime, StringFormat='HH:mm'}" Width="100"/>
+                        <DataGridTextColumn Header="Seats" Binding="{Binding AvailableSeats}" Width="80"/>
+                        <DataGridTextColumn Header="Price" Binding="{Binding TicketPrice, StringFormat='€{0:F2}'}" Width="100"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <!-- Export Buttons -->
+                <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,16,0,0">
+                    <Button Content="📄 Export Word" Classes="secondary" Command="{Binding ExportToWordCommand}" HorizontalAlignment="Stretch"/>
+                    <Button Content="📊 Export Excel" Classes="secondary" Command="{Binding ExportToExcelCommand}" HorizontalAlignment="Stretch"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </Grid>
+
+</UserControl>

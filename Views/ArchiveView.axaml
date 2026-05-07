@@ -1,0 +1,49 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:AirportFlightManagement.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1150" d:DesignHeight="840"
+             x:Class="AirportFlightManagement.Views.ArchiveView"
+             x:DataType="vm:ArchiveViewModel"
+             Padding="24">
+
+    <StackPanel Spacing="20">
+        <TextBlock Text="Archived Flights" FontSize="28" FontWeight="Bold" Foreground="#FFFFFF"/>
+
+        <!-- Filter Section -->
+        <Border Classes="card" Padding="16">
+            <StackPanel Spacing="12">
+                <Grid ColumnDefinitions="*,*,auto,auto" ColumnSpacing="12">
+                    <StackPanel Grid.Column="0" Spacing="8">
+                        <Label Content="From Date" FontWeight="Bold"/>
+                        <TextBox Text="{Binding FromDate}" Watermark="yyyy-MM-dd"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Spacing="8">
+                        <Label Content="To Date" FontWeight="Bold"/>
+                        <TextBox Text="{Binding ToDate}" Watermark="yyyy-MM-dd"/>
+                    </StackPanel>
+
+                    <Button Grid.Column="2" Content="Filter" Classes="primary" Command="{Binding FilterByDateCommand}" VerticalAlignment="Bottom" HorizontalContentAlignment="Center" Padding="16,8"/>
+                    <Button Grid.Column="3" Content="Reset" Classes="secondary" Command="{Binding ResetFilterCommand}" VerticalAlignment="Bottom" HorizontalContentAlignment="Center" Padding="16,8"/>
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <!-- Archived Flights Table -->
+        <Border Classes="card">
+            <DataGrid ItemsSource="{Binding ArchivedFlights}" IsReadOnly="True" ColumnHeaderHeight="40" RowHeight="45">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Flight Code" Binding="{Binding FlightCode}" Width="100"/>
+                    <DataGridTextColumn Header="Destination" Binding="{Binding Destination}" Width="150"/>
+                    <DataGridTextColumn Header="Departure" Binding="{Binding DepartureTime, StringFormat='HH:mm'}" Width="100"/>
+                    <DataGridTextColumn Header="Canceled Date" Binding="{Binding CanceledAt, StringFormat='yyyy-MM-dd HH:mm'}" Width="180"/>
+                    <DataGridTextColumn Header="Reason" Binding="{Binding CancellationReason}" Width="150"/>
+                    <DataGridTextColumn Header="Seats" Binding="{Binding AvailableSeats}" Width="80"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+    </StackPanel>
+
+</UserControl>

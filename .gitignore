@@ -1,0 +1,51 @@
+# Build artifacts
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+
+# IDE configuration
+.idea/
+.vscode/
+.vs/
+*.user
+*.suo
+*.sln.iml
+*.DotSettings.user
+Folder.DotSettings.user
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Environment and configuration
+.env
+.env.local
+.env.*.local
+appsettings.*.json
+!appsettings.json
+
+# Logs
+*.log
+logs/
+
+# Development tools
+.claude/
+.git/
+
+# Third-party
+node_modules/
+packages/
+nuget/
+
+# IDE temp files
+*.tmp
+*.cache
+
+# Test/coverage
+coverage/
+.coverage

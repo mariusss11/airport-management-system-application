@@ -1,0 +1,90 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:AirportFlightManagement.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1150" d:DesignHeight="840"
+             x:Class="AirportFlightManagement.Views.DashboardView"
+             x:DataType="vm:DashboardViewModel"
+             Padding="24">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Spacing="24">
+            <!-- Header -->
+            <TextBlock Text="Dashboard" FontSize="28" FontWeight="Bold" Foreground="#FFFFFF"/>
+
+            <!-- Stats Row -->
+            <Grid ColumnDefinitions="*,*,*,*" RowDefinitions="auto" ColumnSpacing="16" RowSpacing="16">
+                <!-- Total Flights Card -->
+                <Border Grid.Column="0" Classes="stat-card">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Active Flights" FontSize="14" Foreground="#8B8B8B"/>
+                        <TextBlock Text="{Binding TotalFlights}" FontSize="32" FontWeight="Bold" Foreground="#D4AF37"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Available Seats Card -->
+                <Border Grid.Column="1" Classes="stat-card">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Available Seats" FontSize="14" Foreground="#8B8B8B"/>
+                        <TextBlock Text="{Binding AvailableSeats}" FontSize="32" FontWeight="Bold" Foreground="#D4AF37"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Planes At Airport Card -->
+                <Border Grid.Column="2" Classes="stat-card">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Planes Today" FontSize="14" Foreground="#8B8B8B"/>
+                        <TextBlock Text="{Binding PlanesAtAirport}" FontSize="32" FontWeight="Bold" Foreground="#D4AF37"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Canceled Flights Card -->
+                <Border Grid.Column="3" Classes="stat-card">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Canceled" FontSize="14" Foreground="#8B8B8B"/>
+                        <TextBlock Text="{Binding CanceledFlights}" FontSize="32" FontWeight="Bold" Foreground="#D4AF37"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- Longest Flight Highlight -->
+            <Border CornerRadius="8" Padding="20">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                        <GradientStop Color="#DC143C" Offset="0"/>
+                        <GradientStop Color="#8B0000" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Grid ColumnDefinitions="*,auto">
+                    <StackPanel Grid.Column="0" Spacing="8">
+                        <TextBlock Text="Longest Flight Duration" FontSize="14" LetterSpacing="0.3" Foreground="#FFFFFF" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding LongestFlight.FlightCode}" Foreground="#E0E0E0" FontSize="12" Opacity="0.9"/>
+                        <TextBlock Text="{Binding LongestFlight.Destination, StringFormat='To {0}'}" FontSize="18" Foreground="#FFFFFF" FontWeight="Bold"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="4">
+                        <TextBlock Text="{Binding LongestFlight.Duration}" FontSize="28" FontWeight="Bold" Foreground="#FFFFFF" TextAlignment="Right"/>
+                        <TextBlock Text="{Binding AveragePrice, StringFormat=F2}" FontSize="12" Foreground="#E0E0E0" TextAlignment="Right"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Today's Flights Table -->
+            <StackPanel Spacing="12">
+                <TextBlock Text="Today's Flights" FontSize="18" FontWeight="Bold" Foreground="#FFFFFF"/>
+
+                <DataGrid ItemsSource="{Binding TodayFlights}" IsReadOnly="True" ColumnHeaderHeight="40" RowHeight="45">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Flight Code" Binding="{Binding FlightCode}" Width="100"/>
+                        <DataGridTextColumn Header="Destination" Binding="{Binding Destination}" Width="150"/>
+                        <DataGridTextColumn Header="Departure" Binding="{Binding DepartureTime, StringFormat='HH:mm'}" Width="100"/>
+                        <DataGridTextColumn Header="Arrival" Binding="{Binding ArrivalTime, StringFormat='HH:mm'}" Width="100"/>
+                        <DataGridTextColumn Header="Seats" Binding="{Binding AvailableSeats}" Width="80"/>
+                        <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="100"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+
+</UserControl>

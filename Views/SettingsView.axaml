@@ -1,0 +1,76 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:AirportFlightManagement.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1150" d:DesignHeight="840"
+             x:Class="AirportFlightManagement.Views.SettingsView"
+             x:DataType="vm:SettingsViewModel"
+             Padding="24">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Spacing="24">
+            <TextBlock Text="Settings &amp; Administration" FontSize="28" FontWeight="Bold" Foreground="#FFFFFF"/>
+
+            <!-- Database Status -->
+            <Border Classes="card">
+                <StackPanel Spacing="16" Margin="16">
+                    <TextBlock Text="Database Connection" FontSize="18" FontWeight="Bold" Foreground="#FFFFFF"/>
+
+                    <Grid ColumnDefinitions="auto,*,auto" ColumnSpacing="12" RowSpacing="12">
+                        <Ellipse Grid.Column="0" Width="16" Height="16" Fill="{Binding DbStatusColor}" Opacity="0.8"/>
+                        <TextBlock Grid.Column="1" Text="{Binding DbStatus}" Foreground="#E0E0E0" VerticalAlignment="Center"/>
+                        <Button Grid.Column="2" Content="Test Connection" Classes="secondary" Command="{Binding TestConnectionCommand}" Padding="12,6"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Maintenance -->
+            <Border Classes="card">
+                <StackPanel Spacing="16" Margin="16">
+                    <TextBlock Text="Database Maintenance" FontSize="18" FontWeight="Bold" Foreground="#FFFFFF"/>
+
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <Button Content="Backup Now" Classes="secondary" Command="{Binding BackupDatabaseCommand}" Width="150"/>
+                        <Button Content="Optimize DB" Classes="secondary" Command="{Binding OptimizeDatabaseCommand}" Width="150"/>
+                        <Button Content="Restore" Classes="outline" Width="150"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Appearance -->
+            <Border Classes="card">
+                <StackPanel Spacing="16" Margin="16">
+                    <TextBlock Text="Appearance" FontSize="18" FontWeight="Bold" Foreground="#FFFFFF"/>
+
+                    <StackPanel Spacing="12">
+                        <CheckBox Content="Dark Mode (Recommended)" IsChecked="{Binding IsDarkMode}"/>
+                        <StackPanel Spacing="8">
+                            <Label Content="Theme Color" FontWeight="Bold" Foreground="#FFFFFF"/>
+                            <ComboBox SelectedIndex="0">
+                                <ComboBoxItem>🔴 M-Sport Red (Default)</ComboBoxItem>
+                                <ComboBoxItem>🔵 Tech Blue</ComboBoxItem>
+                                <ComboBoxItem>✨ Metallic Gold</ComboBoxItem>
+                            </ComboBox>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Status Message -->
+            <Border IsVisible="{Binding Message, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" Background="#10B981" CornerRadius="6" Padding="16">
+                <TextBlock Text="{Binding Message}" Foreground="#FFFFFF" FontSize="13"/>
+            </Border>
+
+            <!-- Version Info -->
+            <Border Classes="card" Padding="16">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="About the software" FontSize="14" FontWeight="Bold" Foreground="#FFFFFF"/>
+                    <TextBlock Text="Flight Management System v1.0" Foreground="#8B8B8B" FontSize="12"/>
+                    <TextBlock Text="Powered by SkyConnect" Foreground="#8B8B8B" FontSize="12"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+
+</UserControl>
