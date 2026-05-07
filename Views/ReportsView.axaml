@@ -9,7 +9,7 @@
              Padding="24">
 
     <Grid ColumnDefinitions="250,*" RowDefinitions="auto,*" ColumnSpacing="16" RowSpacing="16">
-        <TextBlock Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Text="Reports &amp; Export" FontSize="28" FontWeight="Bold" Foreground="#FFFFFF"/>
+        <TextBlock Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Text="Reports &amp; Export" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}"/>
 
         <!-- Report Types List -->
         <Border Grid.Column="0" Grid.Row="1" Classes="card">
@@ -18,8 +18,8 @@
                     <DataTemplate>
                         <Border Padding="16" Background="Transparent" Cursor="Hand">
                             <StackPanel Spacing="4">
-                                <TextBlock Text="{Binding Title}" FontWeight="Bold" Foreground="#FFFFFF"/>
-                                <TextBlock Text="{Binding Description}" FontSize="11" Foreground="#8B8B8B"/>
+                                <TextBlock Text="{Binding Title}" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}"/>
+                                <TextBlock Text="{Binding Description}" FontSize="11" Foreground="{DynamicResource TextMuted}"/>
                             </StackPanel>
                         </Border>
                     </DataTemplate>
@@ -30,7 +30,7 @@
         <!-- Preview Panel -->
         <Border Grid.Column="1" Grid.Row="1" Classes="card" IsVisible="{Binding SelectedReport, Converter={x:Static ObjectConverters.IsNotNull}}">
             <StackPanel Spacing="16" Margin="16">
-                <TextBlock Text="{Binding SelectedReport.Title}" FontSize="18" FontWeight="Bold" Foreground="#FFFFFF"/>
+                <TextBlock Text="{Binding SelectedReport.Title}" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}"/>
 
                 <!-- Destination Filter (for Average Price report) -->
                 <StackPanel Spacing="8" IsVisible="{Binding ShowDestinationInput}">

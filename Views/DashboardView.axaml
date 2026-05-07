@@ -11,39 +11,39 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Spacing="24">
             <!-- Header -->
-            <TextBlock Text="Dashboard" FontSize="28" FontWeight="Bold" Foreground="#FFFFFF"/>
+            <TextBlock Text="Dashboard" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}"/>
 
             <!-- Stats Row -->
             <Grid ColumnDefinitions="*,*,*,*" RowDefinitions="auto" ColumnSpacing="16" RowSpacing="16">
                 <!-- Total Flights Card -->
                 <Border Grid.Column="0" Classes="stat-card">
                     <StackPanel Spacing="8">
-                        <TextBlock Text="Active Flights" FontSize="14" Foreground="#8B8B8B"/>
-                        <TextBlock Text="{Binding TotalFlights}" FontSize="32" FontWeight="Bold" Foreground="#D4AF37"/>
+                        <TextBlock Text="Active Flights" FontSize="14" Foreground="{DynamicResource TextMuted}"/>
+                        <TextBlock Text="{Binding TotalFlights}" FontSize="32" FontWeight="Bold" Foreground="{DynamicResource MetallicGoldBrush}"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Available Seats Card -->
                 <Border Grid.Column="1" Classes="stat-card">
                     <StackPanel Spacing="8">
-                        <TextBlock Text="Available Seats" FontSize="14" Foreground="#8B8B8B"/>
-                        <TextBlock Text="{Binding AvailableSeats}" FontSize="32" FontWeight="Bold" Foreground="#D4AF37"/>
+                        <TextBlock Text="Available Seats" FontSize="14" Foreground="{DynamicResource TextMuted}"/>
+                        <TextBlock Text="{Binding AvailableSeats}" FontSize="32" FontWeight="Bold" Foreground="{DynamicResource MetallicGoldBrush}"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Planes At Airport Card -->
                 <Border Grid.Column="2" Classes="stat-card">
                     <StackPanel Spacing="8">
-                        <TextBlock Text="Planes Today" FontSize="14" Foreground="#8B8B8B"/>
-                        <TextBlock Text="{Binding PlanesAtAirport}" FontSize="32" FontWeight="Bold" Foreground="#D4AF37"/>
+                        <TextBlock Text="Planes Today" FontSize="14" Foreground="{DynamicResource TextMuted}"/>
+                        <TextBlock Text="{Binding PlanesAtAirport}" FontSize="32" FontWeight="Bold" Foreground="{DynamicResource MetallicGoldBrush}"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Canceled Flights Card -->
                 <Border Grid.Column="3" Classes="stat-card">
                     <StackPanel Spacing="8">
-                        <TextBlock Text="Canceled" FontSize="14" Foreground="#8B8B8B"/>
-                        <TextBlock Text="{Binding CanceledFlights}" FontSize="32" FontWeight="Bold" Foreground="#D4AF37"/>
+                        <TextBlock Text="Canceled" FontSize="14" Foreground="{DynamicResource TextMuted}"/>
+                        <TextBlock Text="{Binding CanceledFlights}" FontSize="32" FontWeight="Bold" Foreground="{DynamicResource MetallicGoldBrush}"/>
                     </StackPanel>
                 </Border>
             </Grid>
@@ -71,7 +71,7 @@
 
             <!-- Today's Flights Table -->
             <StackPanel Spacing="12">
-                <TextBlock Text="Today's Flights" FontSize="18" FontWeight="Bold" Foreground="#FFFFFF"/>
+                <TextBlock Text="Today's Flights" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}"/>
 
                 <DataGrid ItemsSource="{Binding TodayFlights}" IsReadOnly="True" ColumnHeaderHeight="40" RowHeight="45">
                     <DataGrid.Columns>

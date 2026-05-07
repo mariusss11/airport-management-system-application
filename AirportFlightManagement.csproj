@@ -13,7 +13,6 @@
     <Folder Include="Models\" />
     <Folder Include="Services\" />
     <AvaloniaResource Include="Assets\**" />
-    <AvaloniaResource Include="Styles\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,5 +31,11 @@
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
     <PackageReference Include="DocumentFormat.OpenXml" Version="3.5.1" />
     <PackageReference Include="Npgsql" Version="10.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\**\*.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

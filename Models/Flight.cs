@@ -19,4 +19,6 @@ public class Flight
     public string Status { get; set; } = "On Time";
 
     public int Duration => (int)(ArrivalTime.ToTimeSpan() - DepartureTime.ToTimeSpan()).TotalMinutes;
+
+    public string DayName => DepartureDate.DayOfWeek.ToString();
 }

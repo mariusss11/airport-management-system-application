@@ -9,7 +9,7 @@
              Padding="24">
 
     <StackPanel Spacing="20">
-        <TextBlock Text="Archived Flights" FontSize="28" FontWeight="Bold" Foreground="#FFFFFF"/>
+        <TextBlock Text="Archived Flights" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}"/>
 
         <!-- Filter Section -->
         <Border Classes="card" Padding="16">

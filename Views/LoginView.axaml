@@ -6,38 +6,38 @@
              mc:Ignorable="d" d:DesignWidth="1400" d:DesignHeight="900"
              x:Class="AirportFlightManagement.Views.LoginView"
              x:DataType="vm:LoginViewModel"
-             Background="#0A0E27">
+             Background="{DynamicResource WindowBackground}">
 
     <Grid>
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="20" Width="400">
             <!-- Logo/Title -->
-            <TextBlock Text="🛫 AEROPORT" FontSize="48" FontWeight="Bold" Foreground="#DC143C" HorizontalAlignment="Center"/>
-            <TextBlock Text="Flight Management System" FontSize="16" Foreground="#8B8B8B" HorizontalAlignment="Center"/>
+            <TextBlock Text="🛫 AEROPORT" FontSize="48" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center"/>
+            <TextBlock Text="Flight Management System" FontSize="16" Foreground="{DynamicResource TextMuted}" HorizontalAlignment="Center"/>
 
             <!-- Login Card -->
-            <Border Background="#1A1F3A" BorderBrush="#2A2F4A" BorderThickness="1" CornerRadius="12" Padding="32">
+            <Border Background="{DynamicResource SurfaceBackground}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="12" Padding="32">
                 <StackPanel Spacing="16">
                     <!-- Username -->
-                    <TextBlock Text="Username" FontSize="12" Foreground="#FFFFFF" FontWeight="Bold"/>
-                    <TextBox Text="{Binding Username}" Watermark="Enter username" FontSize="13" Padding="12" Background="#0A0E27" Foreground="#FFFFFF" BorderBrush="#2A2F4A"/>
+                    <TextBlock Text="Username" FontSize="12" Foreground="{DynamicResource TextPrimary}" FontWeight="Bold"/>
+                    <TextBox Text="{Binding Username}" Watermark="Enter username" FontSize="13" Padding="12" Background="{DynamicResource LoginInputBackground}" Foreground="{DynamicResource TextPrimary}" BorderBrush="{DynamicResource BorderColor}"/>
 
                     <!-- Password -->
-                    <TextBlock Text="Password" FontSize="12" Foreground="#FFFFFF" FontWeight="Bold"/>
-                    <TextBox Text="{Binding Password}" Watermark="Enter password" FontSize="13" Padding="12" Background="#0A0E27" Foreground="#FFFFFF" BorderBrush="#2A2F4A"/>
+                    <TextBlock Text="Password" FontSize="12" Foreground="{DynamicResource TextPrimary}" FontWeight="Bold"/>
+                    <TextBox Text="{Binding Password}" Watermark="Enter password" FontSize="13" Padding="12" Background="{DynamicResource LoginInputBackground}" Foreground="{DynamicResource TextPrimary}" BorderBrush="{DynamicResource BorderColor}"/>
 
                     <!-- Error Message -->
-                    <TextBlock Text="{Binding ErrorMessage}" Foreground="#EF4444" FontSize="12" TextWrapping="Wrap" IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                    <TextBlock Text="{Binding ErrorMessage}" Foreground="{DynamicResource ErrorBrush}" FontSize="12" TextWrapping="Wrap" IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
 
                     <!-- Login Button -->
                     <Button Content="🔐 LOGIN" Classes="primary" Command="{Binding LoginCommand}" Padding="16,12" FontSize="14" Height="45" CornerRadius="6"/>
 
                     <!-- Demo Credentials -->
-                    <TextBlock Text="Demo: admin / password" Foreground="#8B8B8B" FontSize="11" TextAlignment="Center" Margin="0,8,0,0"/>
+                    <TextBlock Text="Demo: admin / password" Foreground="{DynamicResource TextMuted}" FontSize="11" TextAlignment="Center" Margin="0,8,0,0"/>
                 </StackPanel>
             </Border>
 
             <!-- Loading Indicator -->
-            <ProgressBar IsIndeterminate="{Binding IsLoading}" Height="3" IsVisible="{Binding IsLoading}" Background="Transparent" Foreground="#DC143C"/>
+            <ProgressBar IsIndeterminate="{Binding IsLoading}" Height="3" IsVisible="{Binding IsLoading}" Background="Transparent" Foreground="{DynamicResource AccentBrush}"/>
         </StackPanel>
     </Grid>
 

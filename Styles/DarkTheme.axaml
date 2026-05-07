@@ -3,8 +3,8 @@
 
   <!-- Window Background -->
   <Style Selector="Window">
-    <Setter Property="Background" Value="#0A0E27" />
-    <Setter Property="Foreground" Value="#FFFFFF" />
+    <Setter Property="Background" Value="{DynamicResource WindowBackground}" />
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
   </Style>
 
   <!-- Button Styles -->
@@ -18,39 +18,39 @@
 
   <!-- Primary Button (M-Sport Red) -->
   <Style Selector="Button.primary">
-    <Setter Property="Background" Value="#DC143C" />
+    <Setter Property="Background" Value="{DynamicResource AccentBrush}" />
     <Setter Property="Foreground" Value="#FFFFFF" />
   </Style>
 
   <Style Selector="Button.primary:pointerover">
-    <Setter Property="Background" Value="#FF1744" />
+    <Setter Property="Background" Value="{DynamicResource AccentHoverBrush}" />
   </Style>
 
   <!-- Secondary Button (Tech Blue) -->
   <Style Selector="Button.secondary">
-    <Setter Property="Background" Value="#00B4D8" />
+    <Setter Property="Background" Value="{DynamicResource TechBlueBrush}" />
     <Setter Property="Foreground" Value="#FFFFFF" />
   </Style>
 
   <!-- Danger Button -->
   <Style Selector="Button.danger">
-    <Setter Property="Background" Value="#8B0000" />
+    <Setter Property="Background" Value="{DynamicResource AccentDangerBrush}" />
     <Setter Property="Foreground" Value="#FFFFFF" />
   </Style>
 
   <!-- Outline Button -->
   <Style Selector="Button.outline">
     <Setter Property="Background" Value="Transparent" />
-    <Setter Property="Foreground" Value="#DC143C" />
-    <Setter Property="BorderBrush" Value="#DC143C" />
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}" />
     <Setter Property="BorderThickness" Value="2" />
   </Style>
 
   <!-- Text Input Fields -->
   <Style Selector="TextBox">
-    <Setter Property="Background" Value="#1A1F3A" />
-    <Setter Property="Foreground" Value="#FFFFFF" />
-    <Setter Property="BorderBrush" Value="#2A2F4A" />
+    <Setter Property="Background" Value="{DynamicResource InputBackground}" />
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
     <Setter Property="BorderThickness" Value="1" />
     <Setter Property="CornerRadius" Value="4" />
     <Setter Property="Padding" Value="12" />
@@ -58,15 +58,15 @@
   </Style>
 
   <Style Selector="TextBox:focus">
-    <Setter Property="BorderBrush" Value="#DC143C" />
+    <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}" />
     <Setter Property="BorderThickness" Value="2" />
   </Style>
 
   <!-- ComboBox (Dropdown) -->
   <Style Selector="ComboBox">
-    <Setter Property="Background" Value="#1A1F3A" />
-    <Setter Property="Foreground" Value="#FFFFFF" />
-    <Setter Property="BorderBrush" Value="#2A2F4A" />
+    <Setter Property="Background" Value="{DynamicResource InputBackground}" />
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
     <Setter Property="BorderThickness" Value="1" />
     <Setter Property="CornerRadius" Value="4" />
     <Setter Property="Padding" Value="12" />
@@ -74,36 +74,36 @@
 
   <!-- DataGrid -->
   <Style Selector="DataGrid">
-    <Setter Property="Background" Value="#0A0E27" />
-    <Setter Property="Foreground" Value="#FFFFFF" />
-    <Setter Property="BorderBrush" Value="#2A2F4A" />
+    <Setter Property="Background" Value="{DynamicResource WindowBackground}" />
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
     <Setter Property="BorderThickness" Value="1" />
   </Style>
 
   <!-- DataGrid Header -->
   <Style Selector="DataGridColumnHeader">
-    <Setter Property="Background" Value="#1A1F3A" />
-    <Setter Property="Foreground" Value="#FFFFFF" />
+    <Setter Property="Background" Value="{DynamicResource SurfaceBackground}" />
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
     <Setter Property="Padding" Value="12" />
     <Setter Property="FontWeight" Value="Bold" />
-    <Setter Property="BorderBrush" Value="#2A2F4A" />
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
   </Style>
 
   <!-- Label -->
   <Style Selector="Label">
-    <Setter Property="Foreground" Value="#FFFFFF" />
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
     <Setter Property="FontSize" Value="12" />
   </Style>
 
   <!-- TextBlock -->
   <Style Selector="TextBlock">
-    <Setter Property="Foreground" Value="#FFFFFF" />
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
   </Style>
 
   <!-- Card / Border -->
   <Style Selector="Border.card">
-    <Setter Property="Background" Value="#1A1F3A" />
-    <Setter Property="BorderBrush" Value="#2A2F4A" />
+    <Setter Property="Background" Value="{DynamicResource SurfaceBackground}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
     <Setter Property="BorderThickness" Value="1" />
     <Setter Property="CornerRadius" Value="8" />
     <Setter Property="Padding" Value="16" />
@@ -111,8 +111,8 @@
 
   <!-- Stat Card (Premium Style) -->
   <Style Selector="Border.stat-card">
-    <Setter Property="Background" Value="#1A1F3A" />
-    <Setter Property="BorderBrush" Value="#DC143C" />
+    <Setter Property="Background" Value="{DynamicResource SurfaceBackground}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}" />
     <Setter Property="BorderThickness" Value="2,0,0,0" />
     <Setter Property="CornerRadius" Value="8" />
     <Setter Property="Padding" Value="16" />
@@ -120,38 +120,38 @@
 
   <!-- CheckBox -->
   <Style Selector="CheckBox">
-    <Setter Property="Foreground" Value="#FFFFFF" />
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
     <Setter Property="Cursor" Value="Hand" />
   </Style>
 
   <!-- TabItem -->
   <Style Selector="TabItem">
-    <Setter Property="Foreground" Value="#8B8B8B" />
+    <Setter Property="Foreground" Value="{DynamicResource TextMuted}" />
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="Padding" Value="16,12" />
   </Style>
 
   <Style Selector="TabItem:selected">
-    <Setter Property="Foreground" Value="#DC143C" />
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
     <Setter Property="Background" Value="Transparent" />
   </Style>
 
   <!-- ScrollBar -->
   <Style Selector="ScrollBar">
-    <Setter Property="Background" Value="#1A1F3A" />
+    <Setter Property="Background" Value="{DynamicResource ScrollBarBackground}" />
   </Style>
 
   <!-- Headings -->
   <Style Selector="TextBlock.heading">
     <Setter Property="FontSize" Value="24" />
     <Setter Property="FontWeight" Value="Bold" />
-    <Setter Property="Foreground" Value="#FFFFFF" />
+    <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
   </Style>
 
   <!-- ProgressBar -->
   <Style Selector="ProgressBar">
-    <Setter Property="Background" Value="#1A1F3A" />
-    <Setter Property="Foreground" Value="#DC143C" />
+    <Setter Property="Background" Value="{DynamicResource SurfaceBackground}" />
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
   </Style>
 
 </Styles>

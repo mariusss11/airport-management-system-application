@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace AirportFlightManagement.ViewModels;
 
@@ -63,6 +64,9 @@ public partial class FlightsViewModel : ViewModelBase
 
     [ObservableProperty]
     private string ticketPrice = "100";
+    
+    [ObservableProperty]
+    private string duration = "60";
 
     [ObservableProperty]
     private string status = "On Time";
@@ -77,12 +81,22 @@ public partial class FlightsViewModel : ViewModelBase
     private ObservableCollection<Airport> airports;
 
     [ObservableProperty]
+    private ObservableCollection<Plane> planes;
+
+    [ObservableProperty]
+    private Plane? selectedPlane;
+
+    [ObservableProperty]
     private string? errorMessage;
+
+    [ObservableProperty]
+    private bool isModalOpen = false;
 
     public FlightsViewModel()
     {
         Flights = new ObservableCollection<Flight>(_db.Flights);
         Airports = new ObservableCollection<Airport>(_db.GetAirports());
+        Planes = new ObservableCollection<Plane>(_db.Planes);
         DepartureDate = DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd");
         ApplyFilter();
     }
@@ -93,7 +107,7 @@ public partial class FlightsViewModel : ViewModelBase
     {
         _filteredFlights = _db.Flights
             .Where(f => f.FlightCode.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ||
-                       f.Destination.Contains(SearchText, StringComparison.OrdinalIgnoreCase))
+                        f.Destination.Contains(SearchText, StringComparison.OrdinalIgnoreCase) || f.DepartureAirport.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase))
             .OrderBy(f => f.DepartureTime)
             .ToList();
 
@@ -118,6 +132,7 @@ public partial class FlightsViewModel : ViewModelBase
         DepartureTime = "08:00";
         ArrivalTime = "10:00";
         PlaneId = 0;
+        SelectedPlane = null;
         SelectedDepartureAirportId = null;
         TotalSeats = 180;
         AvailableSeats = 180;
@@ -141,6 +156,7 @@ public partial class FlightsViewModel : ViewModelBase
             DepartureTime = flight.DepartureTime.ToString("HH:mm");
             ArrivalTime = flight.ArrivalTime.ToString("HH:mm");
             PlaneId = flight.PlaneId;
+            SelectedPlane = Planes.FirstOrDefault(p => p.Id == flight.PlaneId);
             SelectedDepartureAirportId = flight.DepartureAirportId;
             TotalSeats = flight.TotalSeats;
             AvailableSeats = flight.AvailableSeats;
@@ -158,34 +174,134 @@ public partial class FlightsViewModel : ViewModelBase
     {
         ErrorMessage = null;
 
+        // Flight code
         if (string.IsNullOrWhiteSpace(FlightCode))
         {
             ErrorMessage = "Flight code is required";
             return;
         }
+        
+        if (!ContainsValidFlightCode(FlightCode))
+        {
+            ErrorMessage = "Flight code can only contain letters and numbers";
+            return;
+        }
+
+        // Destination
+        if (string.IsNullOrWhiteSpace(Destination))
+        {
+            ErrorMessage = "Destination is required";
+            return;
+        }
+        
+        // if (!ContainsOnlyLetters(Destination))
+        // {
+        //     ErrorMessage = "Please enter a valid destination";
+        //     return;
+        // }
+
+        if (!ContainsValidCityName(Destination))
+        {
+            ErrorMessage = "Please enter a valid destination";
+        }
+
+        // Plane
+        if (SelectedPlane == null)
+        {
+            ErrorMessage = "Please select a plane";
+            return;
+        }
+
+        // Airport
+        if (SelectedDepartureAirportId == null)
+        {
+            ErrorMessage = "Please select a departure airport";
+            return;
+        }
+
+        // Departure date
+        if (!DateTime.TryParse(DepartureDate, out DateTime departureDate))
+        {
+            ErrorMessage = "Invalid departure date";
+            return;
+        }
+
+        if (departureDate.Date < DateTime.Today)
+        {
+            ErrorMessage = "Departure date cannot be in the past";
+            return;
+        }
+
+        // Departure time
+        if (!TimeOnly.TryParse(DepartureTime, out TimeOnly departureTime))
+        {
+            ErrorMessage = "Invalid departure time";
+            return;
+        }
+
+        // Arrival time
+        if (!TimeOnly.TryParse(ArrivalTime, out TimeOnly arrivalTime))
+        {
+            ErrorMessage = "Invalid arrival time";
+            return;
+        }
+
+        // Arrival must be after departure
+        if (arrivalTime <= departureTime)
+        {
+            ErrorMessage = "Arrival time must be after departure time";
+            return;
+        }
+
+        // Ticket price
+        if (!decimal.TryParse(TicketPrice, out decimal price))
+        {
+            ErrorMessage = "Invalid ticket price";
+            return;
+        }
+
+        if (price <= 0)
+        {
+            ErrorMessage = "Ticket price must be greater than 0";
+            return;
+        }
+
+        // Seats
+        if (TotalSeats <= 0)
+        {
+            ErrorMessage = "Total seats must be greater than 0";
+            return;
+        }
+
+        if (AvailableSeats < 0)
+        {
+            ErrorMessage = "Available seats cannot be negative";
+            return;
+        }
+
+        if (AvailableSeats > TotalSeats)
+        {
+            ErrorMessage = "Available seats cannot exceed total seats";
+            return;
+        }
 
         try
         {
-            if (!int.TryParse(TicketPrice, out var price))
-            {
-                ErrorMessage = "Invalid ticket price";
-                return;
-            }
-
             var flight = new Flight
             {
                 Id = _editingFlightId ?? 0,
-                FlightCode = FlightCode,
-                Destination = Destination,
-                DepartureTime = TimeOnly.Parse(DepartureTime),
-                ArrivalTime = TimeOnly.Parse(ArrivalTime),
-                PlaneId = PlaneId,
+                FlightCode = FlightCode.Trim(),
+                Destination = Destination.Trim(),
+                DepartureTime = departureTime,
+                ArrivalTime = arrivalTime,
+                PlaneId = SelectedPlane.Id,
                 DepartureAirportId = SelectedDepartureAirportId,
+                DepartureAirport = Airports.FirstOrDefault(a => a.Id == SelectedDepartureAirportId),
                 TotalSeats = TotalSeats,
                 AvailableSeats = AvailableSeats,
                 TicketPrice = price,
                 Status = Status,
-                DepartureDate = DateOnly.Parse(DepartureDate)
+                DepartureDate = DateOnly.FromDateTime(departureDate)
             };
 
             if (_editingFlightId.HasValue)
@@ -198,15 +314,16 @@ public partial class FlightsViewModel : ViewModelBase
             }
 
             Flights = new ObservableCollection<Flight>(_db.Flights);
+
             ApplyFilter();
             CancelPanel();
+            IsModalOpen = false;
         }
         catch (Exception ex)
         {
             ErrorMessage = $"Error saving flight: {ex.Message}";
         }
     }
-
     [RelayCommand]
     private void DeleteFlight()
     {
@@ -219,6 +336,7 @@ public partial class FlightsViewModel : ViewModelBase
             Flights = new ObservableCollection<Flight>(_db.Flights);
             ApplyFilter();
             CancelPanel();
+            IsModalOpen = false;
         }
         catch (Exception ex)
         {
@@ -233,6 +351,15 @@ public partial class FlightsViewModel : ViewModelBase
         _editingFlightId = null;
         SelectedFlight = null;
         ErrorMessage = null;
+    }
+
+    [RelayCommand]
+    private void CancelModal()
+    {
+        _editingFlightId = null;
+        SelectedFlight = null;
+        ErrorMessage = null;
+        IsModalOpen = false;
     }
 
     [RelayCommand]
@@ -274,11 +401,32 @@ public partial class FlightsViewModel : ViewModelBase
         DepartureTime = "08:00";
         ArrivalTime = "10:00";
         PlaneId = 0;
+        SelectedPlane = null;
         SelectedDepartureAirportId = null;
         TotalSeats = 180;
         AvailableSeats = 180;
         TicketPrice = "100";
         Status = "On Time";
         ErrorMessage = null;
+    }
+    
+    private bool ContainsOnlyLetters(string value)
+    {
+        return Regex.IsMatch(value, @"^[a-zA-Z\s]+$");
+    }
+
+    private bool ContainsOnlyLettersAndNumbers(string value)
+    {
+        return Regex.IsMatch(value, @"^[a-zA-Z0-9\s]+$");
+    }
+    
+    private bool ContainsValidCityName(string value)
+    {
+        return Regex.IsMatch(value, @"^[a-zA-Z\s'-]+$");
+    }
+    
+    private bool ContainsValidFlightCode(string value)
+    {
+        return Regex.IsMatch(value, @"^[a-zA-Z0-9\s'-]+$");
     }
 }

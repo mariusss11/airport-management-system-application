@@ -1,0 +1,105 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:AirportFlightManagement.ViewModels"
+        x:Class="AirportFlightManagement.Views.EditFlightModal"
+        Title="Flight Management"
+        Width="600"
+        Height="700"
+        WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource WindowBackground}"
+        Topmost="True">
+
+    <ScrollViewer>
+        <StackPanel Spacing="15" Margin="20">
+
+            <!-- Title -->
+            <TextBlock Text="{Binding PanelTitle}" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}"/>
+
+            <!-- Error Message -->
+            <TextBlock Text="{Binding ErrorMessage}" Foreground="{DynamicResource ErrorSoftBrush}" FontSize="12" IsVisible="{Binding ErrorMessage}"/>
+
+            <!-- Form Fields -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="15" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto" RowSpacing="15">
+                <StackPanel Grid.Column="0" Grid.Row="0" Spacing="4">
+                    <Label Content="Flight Code" Foreground="{DynamicResource TextPrimary}" FontSize="12" FontWeight="Bold"/>
+                    <TextBox Text="{Binding FlightCode}" Background="{DynamicResource InputBackground}" Foreground="{DynamicResource TextPrimary}" BorderBrush="{DynamicResource BorderColor}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Grid.Row="0" Spacing="4">
+                    <Label Content="Destination" Foreground="{DynamicResource TextPrimary}" FontSize="12" FontWeight="Bold"/>
+                    <TextBox Text="{Binding Destination}" Background="{DynamicResource InputBackground}" Foreground="{DynamicResource TextPrimary}" BorderBrush="{DynamicResource BorderColor}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="0" Grid.Row="1" Spacing="4">
+                    <Label Content="Departure Date" Foreground="{DynamicResource TextPrimary}" FontSize="12" FontWeight="Bold"/>
+                    <TextBox Text="{Binding DepartureDate}" Watermark="yyyy-MM-dd" Background="{DynamicResource InputBackground}" Foreground="{DynamicResource TextPrimary}" BorderBrush="{DynamicResource BorderColor}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Grid.Row="1" Spacing="4">
+                    <Label Content="Departure Time" Foreground="{DynamicResource TextPrimary}" FontSize="12" FontWeight="Bold"/>
+                    <TextBox Text="{Binding DepartureTime}" Watermark="HH:mm" Background="{DynamicResource InputBackground}" Foreground="{DynamicResource TextPrimary}" BorderBrush="{DynamicResource BorderColor}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="0" Grid.Row="2" Spacing="4">
+                    <Label Content="Arrival Time" Foreground="{DynamicResource TextPrimary}" FontSize="12" FontWeight="Bold"/>
+                    <TextBox Text="{Binding ArrivalTime}" Watermark="HH:mm" Background="{DynamicResource InputBackground}" Foreground="{DynamicResource TextPrimary}" BorderBrush="{DynamicResource BorderColor}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Grid.Row="2" Spacing="4">
+                    <Label Content="Plane" Foreground="{DynamicResource TextPrimary}" FontSize="12" FontWeight="Bold"/>
+                    <ComboBox ItemsSource="{Binding Planes}" SelectedItem="{Binding SelectedPlane}" Background="{DynamicResource InputBackground}" Foreground="{DynamicResource TextPrimary}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                    <TextBlock Text="{Binding RegistrationNumber}"/>
+                                    <TextBlock Text="{Binding Model}" Foreground="{DynamicResource TextMutedAlt}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+
+                <StackPanel Grid.Column="0" Grid.Row="3" Spacing="4">
+                    <Label Content="Total Seats" Foreground="{DynamicResource TextPrimary}" FontSize="12" FontWeight="Bold"/>
+                    <TextBox Text="{Binding TotalSeats}" Background="{DynamicResource InputBackground}" Foreground="{DynamicResource TextPrimary}" BorderBrush="{DynamicResource BorderColor}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Grid.Row="3" Spacing="4">
+                    <Label Content="Available Seats" Foreground="{DynamicResource TextPrimary}" FontSize="12" FontWeight="Bold"/>
+                    <TextBox Text="{Binding AvailableSeats}" Background="{DynamicResource InputBackground}" Foreground="{DynamicResource TextPrimary}" BorderBrush="{DynamicResource BorderColor}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="0" Grid.Row="4" Spacing="4">
+                    <Label Content="Ticket Price" Foreground="{DynamicResource TextPrimary}" FontSize="12" FontWeight="Bold"/>
+                    <TextBox Text="{Binding TicketPrice}" Background="{DynamicResource InputBackground}" Foreground="{DynamicResource TextPrimary}" BorderBrush="{DynamicResource BorderColor}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Grid.Row="4" Spacing="4">
+                    <Label Content="Status" Foreground="{DynamicResource TextPrimary}" FontSize="12" FontWeight="Bold"/>
+                    <TextBox Text="{Binding Status}" Background="{DynamicResource InputBackground}" Foreground="{DynamicResource TextPrimary}" BorderBrush="{DynamicResource BorderColor}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="2" Spacing="4">
+                    <Label Content="Departure Airport" Foreground="{DynamicResource TextPrimary}" FontSize="12" FontWeight="Bold"/>
+                    <ComboBox ItemsSource="{Binding Airports}" SelectedValue="{Binding SelectedDepartureAirportId}" SelectedValueBinding="{Binding Id}" Background="{DynamicResource InputBackground}" Foreground="{DynamicResource TextPrimary}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                    <TextBlock Text="{Binding Name}"/>
+                                    <TextBlock Text="{Binding Code}" Foreground="{DynamicResource TextMutedAlt}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+            </Grid>
+
+            <!-- Buttons -->
+            <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right" Margin="0,20,0,0">
+                <Button Content="Save" Classes="primary" Command="{Binding SaveFlightCommand}" Padding="20,8"/>
+                <Button Content="Delete" Classes="primary" Command="{Binding DeleteFlightCommand}" Padding="20,8"/>
+                <Button Content="Cancel" Command="{Binding CancelModalCommand}" Padding="20,8"/>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</Window>

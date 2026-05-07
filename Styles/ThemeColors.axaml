@@ -1,0 +1,46 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.ThemeDictionaries>
+
+        <ResourceDictionary x:Key="Dark">
+            <SolidColorBrush x:Key="WindowBackground" Color="#0A0E27"/>
+            <SolidColorBrush x:Key="SurfaceBackground" Color="#1A1F3A"/>
+            <SolidColorBrush x:Key="InputBackground" Color="#1A1F3A"/>
+            <SolidColorBrush x:Key="LoginInputBackground" Color="#0A0E27"/>
+            <SolidColorBrush x:Key="BorderColor" Color="#2A2F4A"/>
+            <SolidColorBrush x:Key="TextPrimary" Color="#FFFFFF"/>
+            <SolidColorBrush x:Key="TextSecondary" Color="#E0E0E0"/>
+            <SolidColorBrush x:Key="TextMuted" Color="#8B8B8B"/>
+            <SolidColorBrush x:Key="TextMutedAlt" Color="#888888"/>
+            <SolidColorBrush x:Key="ScrollBarBackground" Color="#1A1F3A"/>
+        </ResourceDictionary>
+
+        <ResourceDictionary x:Key="Light">
+            <SolidColorBrush x:Key="WindowBackground" Color="#F4F6FB"/>
+            <SolidColorBrush x:Key="SurfaceBackground" Color="#FFFFFF"/>
+            <SolidColorBrush x:Key="InputBackground" Color="#FFFFFF"/>
+            <SolidColorBrush x:Key="LoginInputBackground" Color="#F4F6FB"/>
+            <SolidColorBrush x:Key="BorderColor" Color="#D1D5DB"/>
+            <SolidColorBrush x:Key="TextPrimary" Color="#0A0E27"/>
+            <SolidColorBrush x:Key="TextSecondary" Color="#374151"/>
+            <SolidColorBrush x:Key="TextMuted" Color="#6B7280"/>
+            <SolidColorBrush x:Key="TextMutedAlt" Color="#6B7280"/>
+            <SolidColorBrush x:Key="ScrollBarBackground" Color="#E5E7EB"/>
+        </ResourceDictionary>
+
+    </ResourceDictionary.ThemeDictionaries>
+
+    <!-- Brand / status colors (same in both themes) -->
+    <SolidColorBrush x:Key="AccentBrush" Color="#DC143C"/>
+    <SolidColorBrush x:Key="AccentHoverBrush" Color="#FF1744"/>
+    <SolidColorBrush x:Key="AccentDangerBrush" Color="#8B0000"/>
+    <SolidColorBrush x:Key="TechBlueBrush" Color="#00B4D8"/>
+    <SolidColorBrush x:Key="MetallicGoldBrush" Color="#D4AF37"/>
+    <SolidColorBrush x:Key="SuccessBrush" Color="#10B981"/>
+    <SolidColorBrush x:Key="SuccessAltBrush" Color="#4CAF50"/>
+    <SolidColorBrush x:Key="ErrorBrush" Color="#EF4444"/>
+    <SolidColorBrush x:Key="ErrorSoftBrush" Color="#FF6B6B"/>
+    <SolidColorBrush x:Key="WarningBrush" Color="#FF9800"/>
+
+</ResourceDictionary>

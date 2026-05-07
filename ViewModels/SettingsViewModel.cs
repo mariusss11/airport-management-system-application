@@ -9,7 +9,7 @@ public partial class SettingsViewModel : ViewModelBase
     private readonly DatabaseService _db = DatabaseService.Instance;
 
     [ObservableProperty]
-    private bool isDarkMode = true;
+    private bool isDarkMode = ThemeService.Instance.IsDarkMode;
 
     [ObservableProperty]
     private string dbStatus = "✓ Connected";
@@ -22,6 +22,12 @@ public partial class SettingsViewModel : ViewModelBase
 
     public SettingsViewModel()
     {
+    }
+
+    partial void OnIsDarkModeChanged(bool value)
+    {
+        ThemeService.Instance.SetDarkMode(value);
+        Message = value ? "Switched to dark mode" : "Switched to light mode";
     }
 
     [RelayCommand]

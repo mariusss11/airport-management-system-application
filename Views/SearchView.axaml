@@ -6,84 +6,114 @@
              mc:Ignorable="d" d:DesignWidth="1150" d:DesignHeight="840"
              x:Class="AirportFlightManagement.Views.SearchView"
              x:DataType="vm:SearchViewModel"
-             Padding="24">
+             Padding="24"
+             Background="{DynamicResource WindowBackground}">
 
-    <StackPanel Spacing="24">
-        <TextBlock Text="Search Flights" FontSize="28" FontWeight="Bold" Foreground="#FFFFFF"/>
+    <ScrollViewer>
+        <StackPanel Spacing="24">
+            <TextBlock Text="Search Flights" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}"/>
 
-        <!-- Search Filters -->
-        <Border Classes="card" Padding="20">
-            <StackPanel Spacing="16">
-                <Grid ColumnDefinitions="*,*,*" RowDefinitions="auto,auto,auto" ColumnSpacing="16" RowSpacing="16">
-                    <StackPanel Grid.Row="0" Grid.Column="0" Spacing="8">
-                        <Label Content="Destination" FontWeight="Bold"/>
-                        <TextBox Text="{Binding Destination}" Watermark="e.g. Paris"/>
+            <!-- Search Filters -->
+            <Border Background="{DynamicResource SurfaceBackground}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Padding="20">
+                <StackPanel Spacing="16">
+                    <Grid ColumnDefinitions="*,*,*" RowDefinitions="auto,auto,auto" ColumnSpacing="16" RowSpacing="16">
+                        <StackPanel Grid.Row="0" Grid.Column="0" Spacing="8">
+                            <Label Content="Departure Airport" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}"/>
+                            <TextBox Text="{Binding DepartureLocation}" Watermark="e.g. Bucharest Baneasa Airport"/>
+                        </StackPanel>
+                        
+                        <StackPanel Grid.Row="0" Grid.Column="1" Spacing="8">
+                            <Label Content="Destination" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}"/>
+                            <TextBox Text="{Binding Destination}" Watermark="e.g. Paris"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="0" Grid.Column="2" Spacing="8">
+                            <Label Content="Min Available Seats" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}"/>
+                            <NumericUpDown Value="{Binding MinSeats}" Minimum="0" Increment="1" Maximum="500"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="1" Grid.Column="0" Spacing="8">
+                            <Label Content="From Time" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}"/>
+                            <TextBox Text="{Binding FromTime}" Watermark="HH:mm"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="1" Grid.Column="1" Spacing="8">
+                            <Label Content="To Time" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}"/>
+                            <TextBox Text="{Binding ToTime}" Watermark="HH:mm"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="1" Grid.Column="2" Spacing="8">
+                            <Label Content="Status" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}"/>
+                            <ComboBox SelectedItem="{Binding SelectedStatus}">
+                                <ComboBoxItem>All</ComboBoxItem>
+                                <ComboBoxItem>On Time</ComboBoxItem>
+                                <ComboBoxItem>Delayed</ComboBoxItem>
+                                <ComboBoxItem>Canceled</ComboBoxItem>
+                            </ComboBox>
+                        </StackPanel>
+                    </Grid>
+
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Button Content="Search" Classes="primary" HorizontalContentAlignment="Center" Command="{Binding SearchCommand}" Width="120"/>
+                        <Button Content="Reset" Classes="secondary" HorizontalContentAlignment="Center" Command="{Binding ResetCommand}" Width="120"/>
                     </StackPanel>
+                </StackPanel>
+            </Border>
 
-                    <!-- <StackPanel Grid.Row="0" Grid.Column="1" Spacing="8"> -->
-                    <!--     <Label Content="Day of Week" FontWeight="Bold"/> -->
-                    <!--     <ComboBox SelectedIndex="{Binding SelectedDay}"> -->
-                    <!--         <ComboBoxItem>All Days</ComboBoxItem> -->
-                    <!--         <ComboBoxItem>Monday</ComboBoxItem> -->
-                    <!--         <ComboBoxItem>Tuesday</ComboBoxItem> -->
-                    <!--         <ComboBoxItem>Wednesday</ComboBoxItem> -->
-                    <!--         <ComboBoxItem>Thursday</ComboBoxItem> -->
-                    <!--         <ComboBoxItem>Friday</ComboBoxItem> -->
-                    <!--         <ComboBoxItem>Saturday</ComboBoxItem> -->
-                    <!--         <ComboBoxItem>Sunday</ComboBoxItem> -->
-                    <!--     </ComboBox> -->
-                    <!-- </StackPanel> -->
+            <!-- Error Message -->
+            <TextBlock Text="{Binding ErrorMessage}" Foreground="{DynamicResource ErrorSoftBrush}" FontSize="12" IsVisible="{Binding ErrorMessage}"/>
 
-                    <StackPanel Grid.Row="0" Grid.Column="2" Spacing="8">
-                        <Label Content="Min Available Seats" FontWeight="Bold"/>
-                        <NumericUpDown Value="{Binding MinSeats}" Minimum="0" Increment="1" Maximum="500"/>
-                    </StackPanel>
+            <!-- Results Section -->
+            <StackPanel Spacing="16" IsVisible="{Binding HasSearched}">
+                <TextBlock Text="{Binding SearchResults.Count, StringFormat='Found {0} flights'}" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}"/>
 
-                    <StackPanel Grid.Row="1" Grid.Column="0" Spacing="8">
-                        <Label Content="From Time" FontWeight="Bold"/>
-                        <TextBox Text="{Binding FromTime}" Watermark="HH:mm"/>
-                    </StackPanel>
+                <!-- Flights List as Cards -->
+                <ItemsControl ItemsSource="{Binding PagedResults}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="{DynamicResource SurfaceBackground}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Padding="15" Margin="0,8">
+                                <StackPanel Spacing="8">
+                                    <TextBlock Text="{Binding FlightCode}" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}"/>
+                                    <StackPanel Orientation="Horizontal" Spacing="20">
+                                        <StackPanel Spacing="2">
+                                            <TextBlock Text="Departure" Foreground="{DynamicResource TextMuted}" FontSize="11"/>
+                                            <TextBlock Text="{Binding DepartureAirport.Name}" Foreground="{DynamicResource TextSecondary}" FontSize="12"/>
+                                        </StackPanel>
+                                        <StackPanel Spacing="2">
+                                            <TextBlock Text="Destination" Foreground="{DynamicResource TextMuted}" FontSize="11"/>
+                                            <TextBlock Text="{Binding Destination}" Foreground="{DynamicResource TextSecondary}" FontSize="12"/>
+                                        </StackPanel>
+                                        <StackPanel Spacing="2">
+                                            <TextBlock Text="Departure Day" Foreground="{DynamicResource TextMuted}" FontSize="11"/>
+                                            <TextBlock Text="{Binding DepartureDate, StringFormat='dd MMM yyyy'}" Foreground="{DynamicResource TextSecondary}" FontSize="12"/>
+                                        </StackPanel>
+                                        <StackPanel Spacing="2">
+                                            <TextBlock Text="Departure Time" Foreground="{DynamicResource TextMuted}" FontSize="11"/>
+                                            <TextBlock Text="{Binding DepartureTime, StringFormat='HH:mm'}" Foreground="{DynamicResource TextSecondary}" FontSize="12"/>
+                                        </StackPanel>
+                                        <StackPanel Spacing="2">
+                                            <TextBlock Text="Available Seats" Foreground="{DynamicResource TextMuted}" FontSize="11"/>
+                                            <TextBlock Text="{Binding AvailableSeats}" Foreground="{DynamicResource TextSecondary}" FontSize="12"/>
+                                        </StackPanel>
+                                        <StackPanel Spacing="2">
+                                            <TextBlock Text="Price" Foreground="{DynamicResource TextMuted}" FontSize="11"/>
+                                            <TextBlock Text="{Binding TicketPrice, StringFormat='€{0:F2}'}" Foreground="{DynamicResource TextSecondary}" FontSize="12"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
 
-                    <StackPanel Grid.Row="1" Grid.Column="1" Spacing="8">
-                        <Label Content="To Time" FontWeight="Bold"/>
-                        <TextBox Text="{Binding ToTime}" Watermark="HH:mm"/>
-                    </StackPanel>
-
-                    <StackPanel Grid.Row="1" Grid.Column="2" Spacing="8">
-                        <Label Content="Status" FontWeight="Bold"/>
-                        <ComboBox SelectedItem="{Binding SelectedStatus}">
-                            <ComboBoxItem>All</ComboBoxItem>
-                            <ComboBoxItem>On Time</ComboBoxItem>
-                            <ComboBoxItem>Delayed</ComboBoxItem>
-                            <ComboBoxItem>Canceled</ComboBoxItem>
-                        </ComboBox>
-                    </StackPanel>
-                </Grid>
-
-                <StackPanel Orientation="Horizontal" Spacing="8">
-                    <Button Content="Search" Classes="primary" HorizontalContentAlignment="Center" Command="{Binding SearchCommand}" Width="120"/>
-                    <Button Content="Reset" Classes="secondary" HorizontalContentAlignment="Center" Command="{Binding ResetCommand}" Width="120"/>
+                <!-- Pagination -->
+                <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center" Margin="0,20,0,0">
+                    <Button Content="Previous" Command="{Binding PreviousPageCommand}" Width="100" HorizontalContentAlignment="Center"/>
+                    <TextBlock Text="{Binding CurrentPage}" Foreground="{DynamicResource TextPrimary}" VerticalAlignment="Center" FontSize="14" Margin="10,0"/>
+                    <Button Content="Next" Command="{Binding NextPageCommand}" Width="100" HorizontalContentAlignment="Center"/>
                 </StackPanel>
             </StackPanel>
-        </Border>
-
-        <!-- Results -->
-        <Border Classes="card" IsVisible="{Binding HasSearched}">
-            <StackPanel Spacing="12">
-                <TextBlock Text="{Binding SearchResults.Count, StringFormat='Found {0} flights'}" FontSize="16" FontWeight="Bold" Foreground="#FFFFFF"/>
-
-                <DataGrid ItemsSource="{Binding SearchResults}" IsReadOnly="True" ColumnHeaderHeight="40" RowHeight="40">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Code" Binding="{Binding FlightCode}" Width="80"/>
-                        <DataGridTextColumn Header="Destination" Binding="{Binding Destination}" Width="120"/>
-                        <DataGridTextColumn Header="Day" Binding="{Binding DayName}" Width="100"/>
-                        <DataGridTextColumn Header="Departure" Binding="{Binding DepartureTime, StringFormat='HH:mm'}" Width="100"/>
-                        <DataGridTextColumn Header="Available" Binding="{Binding AvailableSeats}" Width="80"/>
-                        <DataGridTextColumn Header="Price" Binding="{Binding TicketPrice, StringFormat='€{0:F2}'}" Width="100"/>
-                    </DataGrid.Columns>
-                </DataGrid>
-            </StackPanel>
-        </Border>
-    </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
 
 </UserControl>
