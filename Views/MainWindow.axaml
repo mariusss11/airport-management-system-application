@@ -42,6 +42,7 @@
                         <Button Content="Reports" Classes="nav-button" Tag="Reports" Click="OnNavClick" Padding="20,15" FontSize="14" Foreground="{DynamicResource TextPrimary}" Background="Transparent" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
                         <Button Content="Archive" Classes="nav-button" Tag="Archive" Click="OnNavClick" Padding="20,15" FontSize="14" Foreground="{DynamicResource TextPrimary}" Background="Transparent" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
                         <Button Content="Planes" Classes="nav-button" Tag="Planes" Click="OnNavClick" Padding="20,15" FontSize="14" Foreground="{DynamicResource TextPrimary}" Background="Transparent" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+                        <Button Content="Airports" Classes="nav-button" Tag="Airports" Click="OnNavClick" Padding="20,15" FontSize="14" Foreground="{DynamicResource TextPrimary}" Background="Transparent" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
                         <Button Content="Settings" Classes="nav-button" Tag="Settings" Click="OnNavClick" Padding="20,15" FontSize="14" Foreground="{DynamicResource TextPrimary}" Background="Transparent" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
                     </StackPanel>
                 </Border>

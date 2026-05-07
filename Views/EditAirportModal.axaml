@@ -1,0 +1,63 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:AirportFlightManagement.ViewModels"
+        x:Class="AirportFlightManagement.Views.EditAirportModal"
+        Title="Airport Management"
+        Width="520"
+        Height="380"
+        WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource WindowBackground}"
+        Topmost="True">
+
+    <ScrollViewer>
+        <StackPanel Spacing="15" Margin="20">
+
+            <!-- Title -->
+            <TextBlock Text="{Binding PanelTitle}" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}"/>
+
+            <!-- Error Message -->
+            <TextBlock Text="{Binding ErrorMessage}" Foreground="{DynamicResource ErrorSoftBrush}" FontSize="12" IsVisible="{Binding ErrorMessage}"/>
+
+            <!-- Form Fields -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="15" RowDefinitions="Auto,Auto,Auto" RowSpacing="15">
+
+                <StackPanel Grid.Column="0" Grid.Row="0" Spacing="4">
+                    <Label Content="Airport Name" Foreground="{DynamicResource TextPrimary}" FontSize="12" FontWeight="Bold"/>
+                    <TextBox Text="{Binding EditName}" Watermark="e.g. Henri Coandă International" Background="{DynamicResource InputBackground}" Foreground="{DynamicResource TextPrimary}" BorderBrush="{DynamicResource BorderColor}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Grid.Row="0" Spacing="4">
+                    <Label Content="IATA Code" Foreground="{DynamicResource TextPrimary}" FontSize="12" FontWeight="Bold"/>
+                    <TextBox Text="{Binding EditCode}" Watermark="e.g. OTP" MaxLength="3" Background="{DynamicResource InputBackground}" Foreground="{DynamicResource TextPrimary}" BorderBrush="{DynamicResource BorderColor}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="0" Grid.Row="1" Spacing="4">
+                    <Label Content="City" Foreground="{DynamicResource TextPrimary}" FontSize="12" FontWeight="Bold"/>
+                    <TextBox Text="{Binding EditCity}" Watermark="e.g. Bucharest" Background="{DynamicResource InputBackground}" Foreground="{DynamicResource TextPrimary}" BorderBrush="{DynamicResource BorderColor}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Grid.Row="1" Spacing="4">
+                    <Label Content="Country" Foreground="{DynamicResource TextPrimary}" FontSize="12" FontWeight="Bold"/>
+                    <TextBox Text="{Binding EditCountry}" Watermark="e.g. Romania" Background="{DynamicResource InputBackground}" Foreground="{DynamicResource TextPrimary}" BorderBrush="{DynamicResource BorderColor}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Spacing="8">
+                    <Label Content="Status" Foreground="{DynamicResource TextPrimary}" FontSize="12" FontWeight="Bold"/>
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <RadioButton Content="Active" IsChecked="{Binding EditIsActive}" Foreground="{DynamicResource TextPrimary}"/>
+                        <RadioButton Content="Inactive" IsChecked="{Binding EditIsActive, Converter={x:Static BoolConverters.Not}}" Foreground="{DynamicResource TextPrimary}"/>
+                    </StackPanel>
+                </StackPanel>
+
+            </Grid>
+
+            <!-- Buttons -->
+            <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right" Margin="0,20,0,0">
+                <Button Content="Save" Classes="primary" Command="{Binding SaveAirportCommand}" Padding="20,8"/>
+                <Button Content="Delete" Classes="danger" Command="{Binding DeleteAirportCommand}" Padding="20,8"/>
+                <Button Content="Cancel" Command="{Binding CancelModalCommand}" Padding="20,8"/>
+            </StackPanel>
+
+        </StackPanel>
+    </ScrollViewer>
+</Window>

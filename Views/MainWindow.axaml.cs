@@ -33,6 +33,7 @@ public partial class MainWindow : Window
             "Reports" => new ReportsViewModel(),
             "Archive" => new ArchiveViewModel(),
             "Planes" => new PlanesViewModel(),
+            "Airports" => new AirportsViewModel(),
             "Settings" => new SettingsViewModel(),
             _ => null
         };

@@ -57,7 +57,7 @@ public class DatabaseService
             connection.Open();
             using (var cmd = connection.CreateCommand())
             {
-                cmd.CommandText = "SELECT id, name, code FROM airports ORDER BY name";
+                cmd.CommandText = "SELECT id, name, code, city, country, is_active FROM airports ORDER BY name";
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -66,7 +66,10 @@ public class DatabaseService
                         {
                             Id = reader.GetInt32(0),
                             Name = reader.GetString(1),
-                            Code = reader.GetString(2)
+                            Code = reader.GetString(2),
+                            City = reader.GetString(3),
+                            Country = reader.GetString(4),
+                            IsActive = reader.GetBoolean(5)
                         });
                     }
                 }
@@ -414,12 +417,62 @@ public class DatabaseService
             connection.Open();
             using (var cmd = connection.CreateCommand())
             {
-                cmd.CommandText = "INSERT INTO airports (name, code) VALUES (@name, @code) RETURNING id";
+                cmd.CommandText = "INSERT INTO airports (name, code, city, country, is_active) VALUES (@name, @code, @city, @country, @isActive) RETURNING id";
                 cmd.Parameters.AddWithValue("@name", airport.Name);
                 cmd.Parameters.AddWithValue("@code", airport.Code);
+                cmd.Parameters.AddWithValue("@city", airport.City);
+                cmd.Parameters.AddWithValue("@country", airport.Country);
+                cmd.Parameters.AddWithValue("@isActive", airport.IsActive);
                 airport.Id = (int)cmd.ExecuteScalar()!;
             }
         }
         Airports.Add(airport);
+    }
+
+    public void UpdateAirport(Airport airport)
+    {
+        var existing = Airports.FirstOrDefault(a => a.Id == airport.Id);
+        if (existing != null)
+        {
+            using (var connection = new NpgsqlConnection(ConnectionString))
+            {
+                connection.Open();
+                using (var cmd = connection.CreateCommand())
+                {
+                    cmd.CommandText = "UPDATE airports SET name = @name, code = @code, city = @city, country = @country, is_active = @isActive WHERE id = @id";
+                    cmd.Parameters.AddWithValue("@id", airport.Id);
+                    cmd.Parameters.AddWithValue("@name", airport.Name);
+                    cmd.Parameters.AddWithValue("@code", airport.Code);
+                    cmd.Parameters.AddWithValue("@city", airport.City);
+                    cmd.Parameters.AddWithValue("@country", airport.Country);
+                    cmd.Parameters.AddWithValue("@isActive", airport.IsActive);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            existing.Name = airport.Name;
+            existing.Code = airport.Code;
+            existing.City = airport.City;
+            existing.Country = airport.Country;
+            existing.IsActive = airport.IsActive;
+        }
+    }
+
+    public void DeleteAirport(int airportId)
+    {
+        var airport = Airports.FirstOrDefault(a => a.Id == airportId);
+        if (airport != null)
+        {
+            using (var connection = new NpgsqlConnection(ConnectionString))
+            {
+                connection.Open();
+                using (var cmd = connection.CreateCommand())
+                {
+                    cmd.CommandText = "DELETE FROM airports WHERE id = @id";
+                    cmd.Parameters.AddWithValue("@id", airportId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            Airports.Remove(airport);
+        }
     }
 }

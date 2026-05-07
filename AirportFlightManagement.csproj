@@ -40,5 +40,8 @@
     <Compile Update="Views\EditPlaneModal.axaml.cs">
       <DependentUpon>EditPlaneModal.axaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\AirportsView.axaml.cs">
+      <DependentUpon>AirportsView.axaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>
