@@ -18,7 +18,26 @@ public class Flight
     public DateOnly DepartureDate { get; set; }
     public string Status { get; set; } = "On Time";
 
-    public int Duration => (int)(ArrivalTime.ToTimeSpan() - DepartureTime.ToTimeSpan()).TotalMinutes;
+    public int Duration
+    {
+        get
+        {
+            var minutes = (int)(ArrivalTime.ToTimeSpan() - DepartureTime.ToTimeSpan()).TotalMinutes;
+            return minutes >= 0 ? minutes : minutes + 1440;
+        }
+    }
+
+    public string DurationFormatted
+    {
+        get
+        {
+            var hours = Duration / 60;
+            var mins = Duration % 60;
+            var hrLabel = hours == 1 ? "hr" : "hrs";
+            if (hours == 0) return $"{mins} min";
+            return mins != 0 ? $"{hours} {hrLabel} {mins} min" : $"{hours} {hrLabel}";
+        }
+    }
 
     public string DayName => DepartureDate.DayOfWeek.ToString();
 }

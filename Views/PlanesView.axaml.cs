@@ -13,19 +13,40 @@ public partial class PlanesView : UserControl
         InitializeComponent();
     }
 
-    private void OnEditClick(object sender, RoutedEventArgs e)
+    private void OnEditClick(object? sender, RoutedEventArgs e)
     {
         try
         {
-            if (sender is Button button && DataContext is PlanesViewModel vm)
+            if (sender is Button button && DataContext is PlanesViewModel vm && button.DataContext is Plane plane)
             {
-                if (button.DataContext is Plane plane)
+                var mainWindow = TopLevel.GetTopLevel(this) as Window;
+                if (mainWindow != null)
+                {
                     vm.SelectPlane(plane);
+                    vm.IsModalOpen = true;
+                    var modal = new EditPlaneModal { DataContext = vm };
+                    modal.ShowDialog(mainWindow);
+                }
             }
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"OnEditClick error: {ex}");
+        }
+    }
+
+    private void OnAddPlaneClick(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is PlanesViewModel vm)
+        {
+            var mainWindow = TopLevel.GetTopLevel(this) as Window;
+            if (mainWindow != null)
+            {
+                vm.NewPlaneCommand.Execute(null);
+                vm.IsModalOpen = true;
+                var modal = new EditPlaneModal { DataContext = vm };
+                modal.ShowDialog(mainWindow);
+            }
         }
     }
 }

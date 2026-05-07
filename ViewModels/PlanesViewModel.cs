@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.Input;
 using AirportFlightManagement.Services;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace AirportFlightManagement.ViewModels;
 
@@ -57,6 +58,9 @@ public partial class PlanesViewModel : ViewModelBase
 
     [ObservableProperty]
     private string? errorMessage;
+
+    [ObservableProperty]
+    private bool isModalOpen = false;
 
     public PlanesViewModel()
     {
@@ -124,6 +128,23 @@ public partial class PlanesViewModel : ViewModelBase
             return;
         }
 
+        if (!ContainsValidInput(EditRegistrationNumber))
+        {
+            ErrorMessage = "Please enter a valid registration number";
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(EditModel))
+        {
+            ErrorMessage = "Model is required";
+            return;
+        }
+        
+        if (!ContainsValidInput(EditModel))
+        {
+            ErrorMessage = "Please enter a valid plane model";
+        }
+
         try
         {
             var plane = new Plane
@@ -146,6 +167,7 @@ public partial class PlanesViewModel : ViewModelBase
             RefreshStats();
             ApplyFilter();
             CancelPanel();
+            IsModalOpen = false;
         }
         catch (Exception ex)
         {
@@ -165,6 +187,7 @@ public partial class PlanesViewModel : ViewModelBase
             RefreshStats();
             ApplyFilter();
             CancelPanel();
+            IsModalOpen = false;
         }
         catch (Exception ex)
         {
@@ -182,6 +205,18 @@ public partial class PlanesViewModel : ViewModelBase
         EditModel = "";
         EditAtAirport = true;
         ErrorMessage = null;
+    }
+
+    [RelayCommand]
+    private void CancelModal()
+    {
+        _editingId = null;
+        SelectedPlane = null;
+        EditRegistrationNumber = "";
+        EditModel = "";
+        EditAtAirport = true;
+        ErrorMessage = null;
+        IsModalOpen = false;
     }
 
     [RelayCommand]
@@ -224,5 +259,10 @@ public partial class PlanesViewModel : ViewModelBase
         ErrorMessage = null;
         PanelTitle = "Edit Plane";
         IsPanelOpen = true;
+    }
+    
+    private bool ContainsValidInput(string value)
+    {
+        return Regex.IsMatch(value, @"^[a-zA-Z0-9\s'-]+$");
     }
 }

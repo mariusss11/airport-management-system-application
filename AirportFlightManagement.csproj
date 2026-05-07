@@ -37,5 +37,8 @@
     <Compile Update="Views\**\*.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="Views\EditPlaneModal.axaml.cs">
+      <DependentUpon>EditPlaneModal.axaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

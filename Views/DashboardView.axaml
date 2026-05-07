@@ -63,7 +63,7 @@
                         <TextBlock Text="{Binding LongestFlight.Destination, StringFormat='To {0}'}" FontSize="18" Foreground="#FFFFFF" FontWeight="Bold"/>
                     </StackPanel>
                     <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="4">
-                        <TextBlock Text="{Binding LongestFlight.Duration}" FontSize="28" FontWeight="Bold" Foreground="#FFFFFF" TextAlignment="Right"/>
+                        <TextBlock Text="{Binding LongestFlight.DurationFormatted}" FontSize="28" FontWeight="Bold" Foreground="#FFFFFF" TextAlignment="Right"/>
                         <TextBlock Text="{Binding AveragePrice, StringFormat=F2}" FontSize="12" Foreground="#E0E0E0" TextAlignment="Right"/>
                     </StackPanel>
                 </Grid>

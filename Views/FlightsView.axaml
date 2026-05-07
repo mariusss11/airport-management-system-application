@@ -66,10 +66,7 @@
                                         </StackPanel>
                                         <StackPanel Spacing="2">
                                             <TextBlock Text="Duration" Foreground="{DynamicResource TextMuted}" FontSize="11"/>
-                                            <StackPanel Orientation="Horizontal" Spacing="0">
-                                                <TextBlock Text="{Binding Duration}" Foreground="{DynamicResource TextSecondary}" FontSize="12"/>
-                                                <TextBlock Text=" min" Foreground="{DynamicResource TextSecondary}" FontSize="12"/>
-                                            </StackPanel>
+                                            <TextBlock Text="{Binding DurationFormatted}" Foreground="{DynamicResource TextSecondary}" FontSize="12"/>
                                         </StackPanel>
                                         <!-- <StackPanel Spacing="2"> -->
                                             <!-- <TextBlock Text="Status" Foreground="{DynamicResource TextMuted}" FontSize="11"/> -->

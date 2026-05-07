@@ -351,8 +351,8 @@ public class DatabaseService
             connection.Open();
             using (var cmd = connection.CreateCommand())
             {
-                cmd.CommandText = "INSERT INTO planes (plane_code, model, at_airport) VALUES (@planeCode, @model, @atAirport) RETURNING id";
-                cmd.Parameters.AddWithValue("@planeCode", plane.RegistrationNumber);
+                cmd.CommandText = "INSERT INTO planes (registration_number, model, at_airport) VALUES (@registrationNumber, @model, @atAirport) RETURNING id";
+                cmd.Parameters.AddWithValue("@registrationNumber", plane.RegistrationNumber);
                 cmd.Parameters.AddWithValue("@model", plane.Model ?? (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@atAirport", plane.AtAirport);
                 plane.Id = (int)cmd.ExecuteScalar()!;
@@ -371,9 +371,9 @@ public class DatabaseService
                 connection.Open();
                 using (var cmd = connection.CreateCommand())
                 {
-                    cmd.CommandText = "UPDATE planes SET plane_code = @planeCode, model = @model, at_airport = @atAirport WHERE id = @id";
+                    cmd.CommandText = "UPDATE planes SET registration_number = @registrationNumber, model = @model, at_airport = @atAirport WHERE id = @id";
                     cmd.Parameters.AddWithValue("@id", plane.Id);
-                    cmd.Parameters.AddWithValue("@planeCode", plane.RegistrationNumber);
+                    cmd.Parameters.AddWithValue("@registrationNumber", plane.RegistrationNumber);
                     cmd.Parameters.AddWithValue("@model", plane.Model ?? (object)DBNull.Value);
                     cmd.Parameters.AddWithValue("@atAirport", plane.AtAirport);
                     cmd.ExecuteNonQuery();

@@ -1,0 +1,53 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:AirportFlightManagement.ViewModels"
+        x:Class="AirportFlightManagement.Views.EditPlaneModal"
+        Title="Plane Management"
+        Width="480"
+        Height="340"
+        WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource WindowBackground}"
+        Topmost="True">
+
+    <ScrollViewer>
+        <StackPanel Spacing="15" Margin="20">
+
+            <!-- Title -->
+            <TextBlock Text="{Binding PanelTitle}" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}"/>
+
+            <!-- Error Message -->
+            <TextBlock Text="{Binding ErrorMessage}" Foreground="{DynamicResource ErrorSoftBrush}" FontSize="12" IsVisible="{Binding ErrorMessage}"/>
+
+            <!-- Form Fields -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="15" RowDefinitions="Auto,Auto" RowSpacing="15">
+
+                <StackPanel Grid.Column="0" Grid.Row="0" Spacing="4">
+                    <Label Content="Registration Number" Foreground="{DynamicResource TextPrimary}" FontSize="12" FontWeight="Bold"/>
+                    <TextBox Text="{Binding EditRegistrationNumber}" Watermark="e.g. MD-ABC" Background="{DynamicResource InputBackground}" Foreground="{DynamicResource TextPrimary}" BorderBrush="{DynamicResource BorderColor}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Grid.Row="0" Spacing="4">
+                    <Label Content="Model" Foreground="{DynamicResource TextPrimary}" FontSize="12" FontWeight="Bold"/>
+                    <TextBox Text="{Binding EditModel}" Watermark="e.g. Boeing 737" Background="{DynamicResource InputBackground}" Foreground="{DynamicResource TextPrimary}" BorderBrush="{DynamicResource BorderColor}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Spacing="8">
+                    <Label Content="Location" Foreground="{DynamicResource TextPrimary}" FontSize="12" FontWeight="Bold"/>
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <RadioButton Content="At Airport" IsChecked="{Binding EditAtAirport}" Foreground="{DynamicResource TextPrimary}"/>
+                        <RadioButton Content="Away" IsChecked="{Binding EditAtAirport, Converter={x:Static BoolConverters.Not}}" Foreground="{DynamicResource TextPrimary}"/>
+                    </StackPanel>
+                </StackPanel>
+
+            </Grid>
+
+            <!-- Buttons -->
+            <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right" Margin="0,20,0,0">
+                <Button Content="Save" Classes="primary" Command="{Binding SavePlaneCommand}" Padding="20,8"/>
+                <Button Content="Delete" Classes="danger" Command="{Binding DeletePlaneCommand}" Padding="20,8"/>
+                <Button Content="Cancel" Command="{Binding CancelModalCommand}" Padding="20,8"/>
+            </StackPanel>
+
+        </StackPanel>
+    </ScrollViewer>
+</Window>

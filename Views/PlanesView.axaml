@@ -10,7 +10,7 @@
             <!-- Header -->
             <Grid ColumnDefinitions="*,auto" ColumnSpacing="20">
                 <TextBlock Text="Planes" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}" VerticalAlignment="Center"/>
-                <Button Grid.Column="1" Content="Add Plane" Classes="primary" Command="{Binding NewPlaneCommand}"/>
+                <Button Grid.Column="1" Content="Add Plane" Classes="primary" Click="OnAddPlaneClick"/>
             </Grid>
 
             <!-- Summary Stats -->
@@ -55,7 +55,7 @@
                                         </StackPanel>
                                     </StackPanel>
                                 </StackPanel>
-                                <Button Grid.Column="1" Content="Edit" Classes="primary" VerticalAlignment="Center" Padding="15,8"/>
+                                <Button Grid.Column="1" Content="Edit" Classes="primary" VerticalAlignment="Center" Padding="15,8" Click="OnEditClick"/>
                             </Grid>
                         </Border>
                     </DataTemplate>
