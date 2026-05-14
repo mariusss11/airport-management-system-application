@@ -64,6 +64,30 @@ All ViewModels derive from `ViewModelBase` (a thin `ObservableObject` subclass) 
 
 `AvaloniaUseCompiledBindingsByDefault=false` (`AirportFlightManagement.csproj:8`). Bindings resolve at runtime, so binding errors won't surface at build time — watch the debug console for `BindingError` messages. Do not flip this flag without auditing every `.axaml`; many bindings rely on duck-typed property lookup that compiled bindings would reject.
 
+## Git & GitHub workflow
+
+Every task gets its own branch. Never commit directly to `main`.
+
+**Branch naming:** `feat/short-description`, `fix/short-description`, `chore/short-description`
+
+**When a task is finished, or when Marius says "push to GitHub":**
+1. Create a branch for the task if not already on one: `git checkout -b feat/task-name`
+2. Stage and commit all changes with a clear conventional commit message (`feat:`, `fix:`, `chore:`, `database:`, etc.)
+3. Push the branch: `git push origin feat/task-name`
+4. Remind Marius to open a Pull Request on GitHub so the automated code review runs
+
+**Never `git push origin main` directly.** Marius merges branches into `main` himself via GitHub PRs.
+
+**Commit message format:**
+```
+type: short summary
+
+- bullet describing what changed and why
+- another bullet if needed
+```
+
+The repo has two GitHub Actions workflows that only trigger on PRs and comments — they're wasted if we push straight to main.
+
 ## Conventions worth knowing
 
 - `Models/Flight` exposes a derived `Duration` (minutes) and `DayName` — don't store these in the DB.

@@ -65,7 +65,7 @@ public partial class PlanesViewModel : ViewModelBase
 
     public PlanesViewModel()
     {
-        Console.WriteLine("The plane page should appear");
+        _db.RefreshPlanes();
         RefreshStats();
         ApplyFilter();
     }

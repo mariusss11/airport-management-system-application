@@ -26,6 +26,7 @@ public partial class ArchiveViewModel : ViewModelBase
 
     public ArchiveViewModel()
     {
+        _db.RefreshArchivedFlights();
         LoadArchivedFlights();
     }
 

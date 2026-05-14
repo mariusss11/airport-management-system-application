@@ -45,7 +45,7 @@ public partial class FlightsViewModel : ViewModelBase
     private string flightCode = "";
 
     [ObservableProperty]
-    private string destination = "";
+    private int? selectedDestinationAirportId;
 
     [ObservableProperty]
     private string departureTime = "08:00";
@@ -94,6 +94,9 @@ public partial class FlightsViewModel : ViewModelBase
 
     public FlightsViewModel()
     {
+        _db.RefreshFlights();
+        _db.RefreshPlanes();
+        _db.RefreshAirports();
         Flights = new ObservableCollection<Flight>(_db.Flights);
         Airports = new ObservableCollection<Airport>(_db.GetAirports());
         Planes = new ObservableCollection<Plane>(_db.Planes);
@@ -107,7 +110,8 @@ public partial class FlightsViewModel : ViewModelBase
     {
         _filteredFlights = _db.Flights
             .Where(f => f.FlightCode.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ||
-                        f.Destination.Contains(SearchText, StringComparison.OrdinalIgnoreCase) || f.DepartureAirport.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase))
+                        f.Destination.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ||
+                        (f.DepartureAirport != null && f.DepartureAirport.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase)))
             .OrderBy(f => f.DepartureTime)
             .ToList();
 
@@ -128,7 +132,7 @@ public partial class FlightsViewModel : ViewModelBase
     {
         _editingFlightId = null;
         FlightCode = "";
-        Destination = "";
+        SelectedDestinationAirportId = null;
         DepartureTime = "08:00";
         ArrivalTime = "10:00";
         PlaneId = 0;
@@ -152,7 +156,7 @@ public partial class FlightsViewModel : ViewModelBase
             _editingFlightId = flight.Id;
             SelectedFlight = flight;
             FlightCode = flight.FlightCode;
-            Destination = flight.Destination;
+            SelectedDestinationAirportId = flight.DestinationAirportId;
             DepartureTime = flight.DepartureTime.ToString("HH:mm");
             ArrivalTime = flight.ArrivalTime.ToString("HH:mm");
             PlaneId = flight.PlaneId;
@@ -187,22 +191,11 @@ public partial class FlightsViewModel : ViewModelBase
             return;
         }
 
-        // Destination
-        if (string.IsNullOrWhiteSpace(Destination))
+        // Destination airport
+        if (SelectedDestinationAirportId == null)
         {
-            ErrorMessage = "Destination is required";
+            ErrorMessage = "Please select a destination airport";
             return;
-        }
-        
-        // if (!ContainsOnlyLetters(Destination))
-        // {
-        //     ErrorMessage = "Please enter a valid destination";
-        //     return;
-        // }
-
-        if (!ContainsValidCityName(Destination))
-        {
-            ErrorMessage = "Please enter a valid destination";
         }
 
         // Plane
@@ -216,6 +209,12 @@ public partial class FlightsViewModel : ViewModelBase
         if (SelectedDepartureAirportId == null)
         {
             ErrorMessage = "Please select a departure airport";
+            return;
+        }
+
+        if (SelectedDepartureAirportId == SelectedDestinationAirportId)
+        {
+            ErrorMessage = "Departure and destination airports must be different";
             return;
         }
 
@@ -291,12 +290,13 @@ public partial class FlightsViewModel : ViewModelBase
             {
                 Id = _editingFlightId ?? 0,
                 FlightCode = FlightCode.Trim(),
-                Destination = Destination.Trim(),
                 DepartureTime = departureTime,
                 ArrivalTime = arrivalTime,
                 PlaneId = SelectedPlane.Id,
                 DepartureAirportId = SelectedDepartureAirportId,
                 DepartureAirport = Airports.FirstOrDefault(a => a.Id == SelectedDepartureAirportId),
+                DestinationAirportId = SelectedDestinationAirportId,
+                DestinationAirport = Airports.FirstOrDefault(a => a.Id == SelectedDestinationAirportId),
                 TotalSeats = TotalSeats,
                 AvailableSeats = AvailableSeats,
                 TicketPrice = price,
@@ -396,7 +396,7 @@ public partial class FlightsViewModel : ViewModelBase
     private void ResetForm()
     {
         FlightCode = "";
-        Destination = "";
+        SelectedDestinationAirportId = null;
         DepartureDate = DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd");
         DepartureTime = "08:00";
         ArrivalTime = "10:00";
@@ -408,21 +408,6 @@ public partial class FlightsViewModel : ViewModelBase
         TicketPrice = "100";
         Status = "On Time";
         ErrorMessage = null;
-    }
-    
-    private bool ContainsOnlyLetters(string value)
-    {
-        return Regex.IsMatch(value, @"^[a-zA-Z\s]+$");
-    }
-
-    private bool ContainsOnlyLettersAndNumbers(string value)
-    {
-        return Regex.IsMatch(value, @"^[a-zA-Z0-9\s]+$");
-    }
-    
-    private bool ContainsValidCityName(string value)
-    {
-        return Regex.IsMatch(value, @"^[a-zA-Z\s'-]+$");
     }
     
     private bool ContainsValidFlightCode(string value)

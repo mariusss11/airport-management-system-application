@@ -23,7 +23,10 @@ public partial class SearchViewModel : ViewModelBase
     private string destination = "";
 
     [ObservableProperty]
-    private string departureDate = "";
+    private DateTime? fromDate;
+
+    [ObservableProperty]
+    private DateTime? toDate;
 
     [ObservableProperty]
     private string fromTime = "00:00";
@@ -57,6 +60,7 @@ public partial class SearchViewModel : ViewModelBase
 
     public SearchViewModel()
     {
+        _db.RefreshFlights();
     }
 
     [RelayCommand]
@@ -69,6 +73,9 @@ public partial class SearchViewModel : ViewModelBase
             ErrorMessage = "Invalid time format";
             return;
         }
+
+        DateOnly? fromDateParsed = FromDate.HasValue ? DateOnly.FromDateTime(FromDate.Value) : null;
+        DateOnly? toDateParsed = ToDate.HasValue ? DateOnly.FromDateTime(ToDate.Value) : null;
 
         IEnumerable<Flight> results = _db.Flights;
 
@@ -87,6 +94,12 @@ public partial class SearchViewModel : ViewModelBase
         }
 
         results = results.Where(f => f.DepartureTime >= fromT && f.DepartureTime <= toT);
+
+        if (fromDateParsed.HasValue)
+            results = results.Where(f => f.DepartureDate >= fromDateParsed.Value);
+
+        if (toDateParsed.HasValue)
+            results = results.Where(f => f.DepartureDate <= toDateParsed.Value);
 
         if (MinSeats > 0)
         {
@@ -138,7 +151,8 @@ public partial class SearchViewModel : ViewModelBase
     private void Reset()
     {
         Destination = "";
-        DepartureDate = "";
+        FromDate = null;
+        ToDate = null;
         FromTime = "00:00";
         ToTime = "23:59";
         MinSeats = 0;

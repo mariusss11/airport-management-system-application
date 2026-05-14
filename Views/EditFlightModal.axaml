@@ -26,8 +26,17 @@
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" Grid.Row="0" Spacing="4">
-                    <Label Content="Destination" Foreground="{DynamicResource TextPrimary}" FontSize="12" FontWeight="Bold"/>
-                    <TextBox Text="{Binding Destination}" Background="{DynamicResource InputBackground}" Foreground="{DynamicResource TextPrimary}" BorderBrush="{DynamicResource BorderColor}"/>
+                    <Label Content="Destination Airport" Foreground="{DynamicResource TextPrimary}" FontSize="12" FontWeight="Bold"/>
+                    <ComboBox ItemsSource="{Binding Airports}" SelectedValue="{Binding SelectedDestinationAirportId}" SelectedValueBinding="{Binding Id}" Background="{DynamicResource InputBackground}" Foreground="{DynamicResource TextPrimary}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                    <TextBlock Text="{Binding Name}"/>
+                                    <TextBlock Text="{Binding Code}" Foreground="{DynamicResource TextMutedAlt}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
                 </StackPanel>
 
                 <StackPanel Grid.Column="0" Grid.Row="1" Spacing="4">

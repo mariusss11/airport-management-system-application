@@ -38,6 +38,7 @@ public partial class ReportsViewModel : ViewModelBase
 
     public ReportsViewModel()
     {
+        _db.RefreshFlights();
         InitializeReports();
         LoadAvailableDestinations();
     }
@@ -45,7 +46,11 @@ public partial class ReportsViewModel : ViewModelBase
     private void LoadAvailableDestinations()
     {
         AvailableDestinations.Clear();
-        foreach (var destination in _db.Flights.Select(f => f.Destination).Distinct().OrderBy(d => d))
+        foreach (var destination in _db.Flights
+            .Where(f => f.DestinationAirport != null)
+            .Select(f => f.DestinationAirport!.Name)
+            .Distinct()
+            .OrderBy(d => d))
         {
             AvailableDestinations.Add(destination);
         }

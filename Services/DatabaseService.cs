@@ -138,7 +138,7 @@ public class DatabaseService
             connection.Open();
             using (var cmd = connection.CreateCommand())
             {
-                cmd.CommandText = "SELECT f.id, f.flight_code, f.destination, f.departure_time, f.arrival_time, f.plane_id, f.total_seats, f.available_seats, f.ticket_price, f.status, f.departure_date, f.departure_airport_id, a.id, a.name, a.code FROM flights f LEFT JOIN airports a ON f.departure_airport_id = a.id ORDER BY f.departure_date, f.departure_time";
+                cmd.CommandText = "SELECT f.id, f.flight_code, f.departure_time, f.arrival_time, f.plane_id, f.total_seats, f.available_seats, f.ticket_price, f.status, f.departure_date, f.departure_airport_id, a.id, a.name, a.code, f.destination_airport_id, da.id, da.name, da.code FROM flights f LEFT JOIN airports a ON f.departure_airport_id = a.id LEFT JOIN airports da ON f.destination_airport_id = da.id ORDER BY f.departure_date, f.departure_time";
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -147,25 +147,35 @@ public class DatabaseService
                         {
                             Id = reader.GetInt32(0),
                             FlightCode = reader.GetString(1),
-                            Destination = reader.GetString(2),
-                            DepartureTime = reader.GetFieldValue<TimeOnly>(3),
-                            ArrivalTime = reader.GetFieldValue<TimeOnly>(4),
-                            PlaneId = reader.IsDBNull(5) ? 0 : reader.GetInt32(5),
-                            TotalSeats = reader.GetInt32(6),
-                            AvailableSeats = reader.GetInt32(7),
-                            TicketPrice = reader.GetDecimal(8),
-                            Status = reader.GetString(9),
-                            DepartureDate = reader.GetFieldValue<DateOnly>(10),
-                            DepartureAirportId = reader.IsDBNull(11) ? null : reader.GetInt32(11)
+                            DepartureTime = reader.GetFieldValue<TimeOnly>(2),
+                            ArrivalTime = reader.GetFieldValue<TimeOnly>(3),
+                            PlaneId = reader.IsDBNull(4) ? 0 : reader.GetInt32(4),
+                            TotalSeats = reader.GetInt32(5),
+                            AvailableSeats = reader.GetInt32(6),
+                            TicketPrice = reader.GetDecimal(7),
+                            Status = reader.GetString(8),
+                            DepartureDate = reader.GetFieldValue<DateOnly>(9),
+                            DepartureAirportId = reader.IsDBNull(10) ? null : reader.GetInt32(10),
+                            DestinationAirportId = reader.IsDBNull(14) ? null : reader.GetInt32(14)
                         };
 
-                        if (!reader.IsDBNull(12))
+                        if (!reader.IsDBNull(11))
                         {
                             flight.DepartureAirport = new Airport
                             {
-                                Id = reader.GetInt32(12),
-                                Name = reader.GetString(13),
-                                Code = reader.GetString(14)
+                                Id = reader.GetInt32(11),
+                                Name = reader.GetString(12),
+                                Code = reader.GetString(13)
+                            };
+                        }
+
+                        if (!reader.IsDBNull(15))
+                        {
+                            flight.DestinationAirport = new Airport
+                            {
+                                Id = reader.GetInt32(15),
+                                Name = reader.GetString(16),
+                                Code = reader.GetString(17)
                             };
                         }
 
@@ -217,9 +227,8 @@ public class DatabaseService
             connection.Open();
             using (var cmd = connection.CreateCommand())
             {
-                cmd.CommandText = @"INSERT INTO flights (flight_code, destination, departure_time, arrival_time, plane_id, total_seats, available_seats, ticket_price, status, departure_date, departure_airport_id) VALUES (@flightCode, @destination, @departureTime, @arrivalTime, @planeId, @totalSeats, @availableSeats, @ticketPrice, @status, @departureDate, @departureAirportId) RETURNING id";
+                cmd.CommandText = @"INSERT INTO flights (flight_code, departure_time, arrival_time, plane_id, total_seats, available_seats, ticket_price, status, departure_date, departure_airport_id, destination_airport_id) VALUES (@flightCode, @departureTime, @arrivalTime, @planeId, @totalSeats, @availableSeats, @ticketPrice, @status, @departureDate, @departureAirportId, @destinationAirportId) RETURNING id";
                 cmd.Parameters.AddWithValue("@flightCode", flight.FlightCode);
-                cmd.Parameters.AddWithValue("@destination", flight.Destination);
                 cmd.Parameters.AddWithValue("@departureTime", flight.DepartureTime);
                 cmd.Parameters.AddWithValue("@arrivalTime", flight.ArrivalTime);
                 cmd.Parameters.AddWithValue("@planeId", flight.PlaneId > 0 ? (object)flight.PlaneId : DBNull.Value);
@@ -229,6 +238,7 @@ public class DatabaseService
                 cmd.Parameters.AddWithValue("@status", flight.Status ?? "On Time");
                 cmd.Parameters.AddWithValue("@departureDate", flight.DepartureDate);
                 cmd.Parameters.AddWithValue("@departureAirportId", flight.DepartureAirportId.HasValue ? (object)flight.DepartureAirportId.Value : DBNull.Value);
+                cmd.Parameters.AddWithValue("@destinationAirportId", flight.DestinationAirportId.HasValue ? (object)flight.DestinationAirportId.Value : DBNull.Value);
                 flight.Id = (int)cmd.ExecuteScalar()!;
             }
         }
@@ -245,10 +255,9 @@ public class DatabaseService
                 connection.Open();
                 using (var cmd = connection.CreateCommand())
                 {
-                    cmd.CommandText = "UPDATE flights SET flight_code = @flightCode, destination = @destination, departure_time = @departureTime, arrival_time = @arrivalTime, plane_id = @planeId, total_seats = @totalSeats, available_seats = @availableSeats, ticket_price = @ticketPrice, status = @status, departure_date = @departureDate, departure_airport_id = @departureAirportId WHERE id = @id";
+                    cmd.CommandText = "UPDATE flights SET flight_code = @flightCode, departure_time = @departureTime, arrival_time = @arrivalTime, plane_id = @planeId, total_seats = @totalSeats, available_seats = @availableSeats, ticket_price = @ticketPrice, status = @status, departure_date = @departureDate, departure_airport_id = @departureAirportId, destination_airport_id = @destinationAirportId WHERE id = @id";
                     cmd.Parameters.AddWithValue("@id", flight.Id);
                     cmd.Parameters.AddWithValue("@flightCode", flight.FlightCode);
-                    cmd.Parameters.AddWithValue("@destination", flight.Destination);
                     cmd.Parameters.AddWithValue("@departureTime", flight.DepartureTime);
                     cmd.Parameters.AddWithValue("@arrivalTime", flight.ArrivalTime);
                     cmd.Parameters.AddWithValue("@planeId", flight.PlaneId > 0 ? (object)flight.PlaneId : DBNull.Value);
@@ -258,16 +267,18 @@ public class DatabaseService
                     cmd.Parameters.AddWithValue("@status", flight.Status ?? "On Time");
                     cmd.Parameters.AddWithValue("@departureDate", flight.DepartureDate);
                     cmd.Parameters.AddWithValue("@departureAirportId", flight.DepartureAirportId.HasValue ? (object)flight.DepartureAirportId.Value : DBNull.Value);
+                    cmd.Parameters.AddWithValue("@destinationAirportId", flight.DestinationAirportId.HasValue ? (object)flight.DestinationAirportId.Value : DBNull.Value);
                     cmd.ExecuteNonQuery();
                 }
             }
             existing.FlightCode = flight.FlightCode;
-            existing.Destination = flight.Destination;
             existing.DepartureTime = flight.DepartureTime;
             existing.ArrivalTime = flight.ArrivalTime;
             existing.PlaneId = flight.PlaneId;
             existing.DepartureAirportId = flight.DepartureAirportId;
             existing.DepartureAirport = flight.DepartureAirport;
+            existing.DestinationAirportId = flight.DestinationAirportId;
+            existing.DestinationAirport = flight.DestinationAirport;
             existing.TotalSeats = flight.TotalSeats;
             existing.AvailableSeats = flight.AvailableSeats;
             existing.TicketPrice = flight.TicketPrice;
@@ -310,6 +321,12 @@ public class DatabaseService
             LoadArchivedFlights();
         }
     }
+
+    public void RefreshFlights() => TryLoad("Flights", LoadFlights);
+    public void RefreshPlanes() => TryLoad("Planes", LoadPlanes);
+    public void RefreshAirports() => TryLoad("Airports", LoadAirports);
+    public void RefreshArchivedFlights() => TryLoad("ArchivedFlights", LoadArchivedFlights);
+    public void RefreshAll() => LoadDataFromDatabase();
 
     public int GetTotalFlights() => Flights.Count;
     public int GetDeparturesCount() => Flights.Count;

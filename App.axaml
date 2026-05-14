@@ -19,5 +19,6 @@
     <Application.Styles>
         <FluentTheme />
         <StyleInclude Source="avares://AirportFlightManagement/Styles/DarkTheme.axaml" />
+        <StyleInclude Source="avares://AirportFlightManagement/Styles/CalendarTheme.axaml" />
     </Application.Styles>
 </Application>

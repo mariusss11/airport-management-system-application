@@ -67,6 +67,7 @@ public partial class AirportsViewModel : ViewModelBase
 
     public AirportsViewModel()
     {
+        _db.RefreshAirports();
         RefreshStats();
         ApplyFilter();
     }
