@@ -16,7 +16,7 @@
             <!-- Search Filters -->
             <Border Background="{DynamicResource SurfaceBackground}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Padding="20">
                 <StackPanel Spacing="16">
-                    <Grid ColumnDefinitions="*,*,*" RowDefinitions="auto,auto,auto" ColumnSpacing="16" RowSpacing="16">
+                    <Grid ColumnDefinitions="*,*,*" RowDefinitions="auto,auto,auto,auto" ColumnSpacing="16" RowSpacing="16">
                         <StackPanel Grid.Row="0" Grid.Column="0" Spacing="8">
                             <Label Content="Departure Airport" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}"/>
                             <TextBox Text="{Binding DepartureLocation}" Watermark="e.g. Bucharest Baneasa Airport"/>
@@ -50,6 +50,16 @@
                                 <ComboBoxItem>Delayed</ComboBoxItem>
                                 <ComboBoxItem>Canceled</ComboBoxItem>
                             </ComboBox>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="2" Grid.Column="0" Spacing="8">
+                            <Label Content="From Date" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}"/>
+                            <CalendarDatePicker SelectedDate="{Binding FromDate}" Watermark="Select a date"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="2" Grid.Column="1" Spacing="8">
+                            <Label Content="To Date" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}"/>
+                            <CalendarDatePicker SelectedDate="{Binding ToDate}" Watermark="Select a date"/>
                         </StackPanel>
                     </Grid>
 

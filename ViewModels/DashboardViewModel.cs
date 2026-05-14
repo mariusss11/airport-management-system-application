@@ -34,6 +34,7 @@ public partial class DashboardViewModel : ViewModelBase
 
     public DashboardViewModel()
     {
+        _db.RefreshAll();
         LoadData();
     }
 
