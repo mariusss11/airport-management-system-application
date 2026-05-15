@@ -194,7 +194,7 @@ public class DatabaseService
             connection.Open();
             using (var cmd = connection.CreateCommand())
             {
-                cmd.CommandText = "SELECT id, flight_code, destination, departure_time, arrival_time, plane_id, total_seats, available_seats, ticket_price, day_of_week, canceled_at, cancellation_reason FROM archived_flights ORDER BY canceled_at DESC";
+                cmd.CommandText = "SELECT id, flight_code, destination, departure_time, arrival_time, plane_id, total_seats, available_seats, ticket_price, day_of_week, canceled_at, cancellation_reason, departure_airport_id, destination_airport_id FROM archived_flights ORDER BY canceled_at DESC";
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -212,7 +212,9 @@ public class DatabaseService
                             TicketPrice = reader.GetDecimal(8),
                             DayOfWeek = reader.GetInt16(9),
                             CanceledAt = reader.GetDateTime(10),
-                            CancellationReason = reader.IsDBNull(11) ? null : reader.GetString(11)
+                            CancellationReason = reader.IsDBNull(11) ? null : reader.GetString(11),
+                            DepartureAirportId = reader.IsDBNull(12) ? null : reader.GetInt32(12),
+                            DestinationAirportId = reader.IsDBNull(13) ? null : reader.GetInt32(13)
                         });
                     }
                 }
@@ -297,7 +299,7 @@ public class DatabaseService
                 connection.Open();
                 using (var cmd = connection.CreateCommand())
                 {
-                    cmd.CommandText = "INSERT INTO archived_flights (flight_code, destination, departure_time, arrival_time, plane_id, total_seats, available_seats, ticket_price, day_of_week, cancellation_reason) VALUES (@flightCode, @destination, @departureTime, @arrivalTime, @planeId, @totalSeats, @availableSeats, @ticketPrice, @dayOfWeek, @reason)";
+                    cmd.CommandText = "INSERT INTO archived_flights (flight_code, destination, departure_time, arrival_time, plane_id, total_seats, available_seats, ticket_price, day_of_week, departure_airport_id, destination_airport_id, cancellation_reason) VALUES (@flightCode, @destination, @departureTime, @arrivalTime, @planeId, @totalSeats, @availableSeats, @ticketPrice, @dayOfWeek, @departureAirportId, @destinationAirportId, @reason)";
                     cmd.Parameters.AddWithValue("@flightCode", flight.FlightCode);
                     cmd.Parameters.AddWithValue("@destination", flight.Destination);
                     cmd.Parameters.AddWithValue("@departureTime", flight.DepartureTime);
@@ -307,6 +309,8 @@ public class DatabaseService
                     cmd.Parameters.AddWithValue("@availableSeats", flight.AvailableSeats);
                     cmd.Parameters.AddWithValue("@ticketPrice", flight.TicketPrice);
                     cmd.Parameters.AddWithValue("@dayOfWeek", (int)flight.DepartureDate.DayOfWeek);
+                    cmd.Parameters.AddWithValue("@departureAirportId", flight.DepartureAirportId.HasValue ? (object)flight.DepartureAirportId.Value : DBNull.Value);
+                    cmd.Parameters.AddWithValue("@destinationAirportId", flight.DestinationAirportId.HasValue ? (object)flight.DestinationAirportId.Value : DBNull.Value);
                     cmd.Parameters.AddWithValue("@reason", reason);
                     cmd.ExecuteNonQuery();
                 }

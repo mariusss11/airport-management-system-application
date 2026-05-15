@@ -6,44 +6,117 @@
              mc:Ignorable="d" d:DesignWidth="1150" d:DesignHeight="840"
              x:Class="AirportFlightManagement.Views.ArchiveView"
              x:DataType="vm:ArchiveViewModel"
-             Padding="24">
+             Background="{DynamicResource WindowBackground}">
 
-    <StackPanel Spacing="20">
-        <TextBlock Text="Archived Flights" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}"/>
+    <ScrollViewer>
+        <StackPanel Spacing="20" Margin="24">
 
-        <!-- Filter Section -->
-        <Border Classes="card" Padding="16">
-            <StackPanel Spacing="12">
-                <Grid ColumnDefinitions="*,*,auto,auto" ColumnSpacing="12">
-                    <StackPanel Grid.Column="0" Spacing="8">
-                        <Label Content="From Date" FontWeight="Bold"/>
-                        <TextBox Text="{Binding FromDate}" Watermark="yyyy-MM-dd"/>
+            <!-- Header -->
+            <TextBlock Text="Archived Flights" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}"/>
+
+            <!-- Summary Stats -->
+            <!-- <Border Background="{DynamicResource SurfaceBackground}" Padding="15" CornerRadius="4" -->
+            <!--         BorderBrush="{DynamicResource BorderColor}" BorderThickness="1"> -->
+            <!--     <StackPanel Orientation="Horizontal" Spacing="5"> -->
+            <!--         <TextBlock Text="Total Archived:" Foreground="{DynamicResource TextMuted}" FontSize="12" VerticalAlignment="Center"/> -->
+            <!--         <TextBlock Text="{Binding ArchivedFlights.Count}" Foreground="{DynamicResource MetallicGoldBrush}" FontSize="20" FontWeight="Bold" VerticalAlignment="Center"/> -->
+            <!--     </StackPanel> -->
+            <!-- </Border> -->
+
+            <!-- Filters -->
+            <Border Background="{DynamicResource SurfaceBackground}" BorderBrush="{DynamicResource BorderColor}"
+                    BorderThickness="1" CornerRadius="4" Padding="20">
+                <StackPanel Spacing="16">
+
+                    <!-- Search -->
+                    <StackPanel Spacing="8">
+                        <Label Content="Search" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}"/>
+                        <TextBox Text="{Binding SearchText}" Watermark="Search by flight code, destination, or cancellation reason..."/>
                     </StackPanel>
 
-                    <StackPanel Grid.Column="1" Spacing="8">
-                        <Label Content="To Date" FontWeight="Bold"/>
-                        <TextBox Text="{Binding ToDate}" Watermark="yyyy-MM-dd"/>
+                    <!-- Date Range -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="16">
+                        <StackPanel Grid.Column="0" Spacing="8">
+                            <Label Content="From Date" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}"/>
+                            <CalendarDatePicker SelectedDate="{Binding FromDate}" Watermark="Select start date"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Spacing="8">
+                            <Label Content="To Date" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}"/>
+                            <CalendarDatePicker SelectedDate="{Binding ToDate}" Watermark="Select end date"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Buttons -->
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Button Content="Filter" Classes="primary" Width="120" HorizontalContentAlignment="Center" Command="{Binding FilterCommand}"/>
+                        <Button Content="Reset" Classes="secondary" Width="120" HorizontalContentAlignment="Center" Command="{Binding ResetFilterCommand}"/>
                     </StackPanel>
 
-                    <Button Grid.Column="2" Content="Filter" Classes="primary" Command="{Binding FilterByDateCommand}" VerticalAlignment="Bottom" HorizontalContentAlignment="Center" Padding="16,8"/>
-                    <Button Grid.Column="3" Content="Reset" Classes="secondary" Command="{Binding ResetFilterCommand}" VerticalAlignment="Bottom" HorizontalContentAlignment="Center" Padding="16,8"/>
-                </Grid>
-            </StackPanel>
-        </Border>
+                </StackPanel>
+            </Border>
 
-        <!-- Archived Flights Table -->
-        <Border Classes="card">
-            <DataGrid ItemsSource="{Binding ArchivedFlights}" IsReadOnly="True" ColumnHeaderHeight="40" RowHeight="45">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Flight Code" Binding="{Binding FlightCode}" Width="100"/>
-                    <DataGridTextColumn Header="Destination" Binding="{Binding Destination}" Width="150"/>
-                    <DataGridTextColumn Header="Departure" Binding="{Binding DepartureTime, StringFormat='HH:mm'}" Width="100"/>
-                    <DataGridTextColumn Header="Canceled Date" Binding="{Binding CanceledAt, StringFormat='yyyy-MM-dd HH:mm'}" Width="180"/>
-                    <DataGridTextColumn Header="Reason" Binding="{Binding CancellationReason}" Width="150"/>
-                    <DataGridTextColumn Header="Seats" Binding="{Binding AvailableSeats}" Width="80"/>
-                </DataGrid.Columns>
-            </DataGrid>
-        </Border>
-    </StackPanel>
+            <!-- Results count -->
+            <TextBlock Text="{Binding ArchivedFlights.Count, StringFormat='Showing {0} archived flight(s)'}"
+                       FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}"/>
+
+            <!-- Flight Cards -->
+            <ItemsControl ItemsSource="{Binding ArchivedFlights}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Background="{DynamicResource SurfaceBackground}" BorderBrush="{DynamicResource BorderColor}"
+                                BorderThickness="1" CornerRadius="4" Padding="15" Margin="0,4">
+                            <Grid ColumnDefinitions="*,auto" ColumnSpacing="15">
+                                <StackPanel Spacing="8">
+                                    <!-- Flight code + status badge -->
+                                    <StackPanel Orientation="Horizontal" Spacing="12">
+                                        <TextBlock Text="{Binding FlightCode}" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}"/>
+                                        <Border Background="#3C1A1A" BorderBrush="#DC143C" BorderThickness="1"
+                                                CornerRadius="4" Padding="6,2">
+                                            <TextBlock Text="ARCHIVED" FontSize="10" FontWeight="Bold" Foreground="#DC143C"/>
+                                        </Border>
+                                    </StackPanel>
+
+                                    <!-- Flight details -->
+                                    <StackPanel Orientation="Horizontal" Spacing="20">
+                                        <StackPanel Spacing="2">
+                                            <TextBlock Text="Destination" Foreground="{DynamicResource TextMuted}" FontSize="11"/>
+                                            <TextBlock Text="{Binding Destination}" Foreground="{DynamicResource TextSecondary}" FontSize="12"/>
+                                        </StackPanel>
+                                        <StackPanel Spacing="2">
+                                            <TextBlock Text="Departure" Foreground="{DynamicResource TextMuted}" FontSize="11"/>
+                                            <TextBlock Text="{Binding DepartureTime, StringFormat='HH:mm'}" Foreground="{DynamicResource TextSecondary}" FontSize="12"/>
+                                        </StackPanel>
+                                        <StackPanel Spacing="2">
+                                            <TextBlock Text="Arrival" Foreground="{DynamicResource TextMuted}" FontSize="11"/>
+                                            <TextBlock Text="{Binding ArrivalTime, StringFormat='HH:mm'}" Foreground="{DynamicResource TextSecondary}" FontSize="12"/>
+                                        </StackPanel>
+                                        <StackPanel Spacing="2">
+                                            <TextBlock Text="Seats" Foreground="{DynamicResource TextMuted}" FontSize="11"/>
+                                            <TextBlock Text="{Binding AvailableSeats}" Foreground="{DynamicResource TextSecondary}" FontSize="12"/>
+                                        </StackPanel>
+                                        <StackPanel Spacing="2">
+                                            <TextBlock Text="Price" Foreground="{DynamicResource TextMuted}" FontSize="11"/>
+                                            <TextBlock Text="{Binding TicketPrice, StringFormat='€{0:F2}'}" Foreground="{DynamicResource TextSecondary}" FontSize="12"/>
+                                        </StackPanel>
+                                        <StackPanel Spacing="2">
+                                            <TextBlock Text="Canceled At" Foreground="{DynamicResource TextMuted}" FontSize="11"/>
+                                            <TextBlock Text="{Binding CanceledAt, StringFormat='dd MMM yyyy HH:mm'}" Foreground="#E57373" FontSize="12"/>
+                                        </StackPanel>
+                                    </StackPanel>
+
+                                    <!-- Cancellation reason -->
+                                    <StackPanel Orientation="Horizontal" Spacing="6" IsVisible="{Binding CancellationReason}">
+                                        <TextBlock Text="Reason:" Foreground="{DynamicResource TextMuted}" FontSize="11"/>
+                                        <TextBlock Text="{Binding CancellationReason}" Foreground="{DynamicResource TextSecondary}" FontSize="11" FontStyle="Italic"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+        </StackPanel>
+    </ScrollViewer>
 
 </UserControl>
