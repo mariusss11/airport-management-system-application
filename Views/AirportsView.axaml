@@ -54,10 +54,18 @@
                                             <TextBlock Text="Country" Foreground="{DynamicResource TextMuted}" FontSize="11"/>
                                             <TextBlock Text="{Binding Country}" Foreground="{DynamicResource TextSecondary}" FontSize="12"/>
                                         </StackPanel>
-                                        <StackPanel Spacing="2">
-                                            <TextBlock Text="Status" Foreground="{DynamicResource TextMuted}" FontSize="11"/>
-                                            <TextBlock Text="{Binding IsActive}" Foreground="{DynamicResource SuccessAltBrush}" FontSize="12"/>
-                                        </StackPanel>
+                                        <Border CornerRadius="12" Padding="10,4" VerticalAlignment="Center">
+                                            <Panel>
+                                                <StackPanel Orientation="Horizontal" Spacing="5" IsVisible="{Binding IsActive}">
+                                                    <Ellipse Width="7" Height="7" Fill="{DynamicResource SuccessAltBrush}" VerticalAlignment="Center"/>
+                                                    <TextBlock Text="Active" Foreground="{DynamicResource SuccessAltBrush}" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal" Spacing="5" IsVisible="{Binding !IsActive}">
+                                                    <Ellipse Width="7" Height="7" Fill="{DynamicResource DangerBrush}" VerticalAlignment="Center"/>
+                                                    <TextBlock Text="Inactive" Foreground="{DynamicResource DangerBrush}" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                                </StackPanel>
+                                            </Panel>
+                                        </Border>
                                     </StackPanel>
                                 </StackPanel>
                                 <Button Grid.Column="1" Content="Edit" Classes="primary" VerticalAlignment="Center" Padding="15,8" Click="OnEditClick"/>
