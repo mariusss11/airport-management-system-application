@@ -53,6 +53,7 @@
 
                 <!-- Export Buttons -->
                 <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,16,0,0">
+                    <Button Content="📄 Export TEST" Classes="secondary" Command="{Binding ExportCommand}" HorizontalAlignment="Stretch"/>
                     <Button Content="📄 Export Word" Classes="secondary" Command="{Binding ExportToWordCommand}" HorizontalAlignment="Stretch"/>
                     <Button Content="📊 Export Excel" Classes="secondary" Command="{Binding ExportToExcelCommand}" HorizontalAlignment="Stretch"/>
                 </StackPanel>
