@@ -16,50 +16,53 @@ public partial class ArchiveViewModel : ViewModelBase
     private ObservableCollection<ArchivedFlight> archivedFlights = new();
 
     [ObservableProperty]
-    private ArchivedFlight? selectedFlight;
+    private string searchText = string.Empty;
 
     [ObservableProperty]
-    private string fromDate = DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd");
+    private DateTime? fromDate = DateTime.Now.AddMonths(-6);
 
     [ObservableProperty]
-    private string toDate = DateTime.Now.ToString("yyyy-MM-dd");
+    private DateTime? toDate = DateTime.Now;
 
     public ArchiveViewModel()
     {
         _db.RefreshArchivedFlights();
-        LoadArchivedFlights();
+        ApplyFilter();
     }
 
-    private void LoadArchivedFlights()
-    {
-        ArchivedFlights = new ObservableCollection<ArchivedFlight>(_db.ArchivedFlights);
-    }
+    partial void OnSearchTextChanged(string value) => ApplyFilter();
 
-    [RelayCommand]
-    private void FilterByDate()
+    private void ApplyFilter()
     {
-        if (DateTime.TryParse(FromDate, out var from) && DateTime.TryParse(ToDate, out var to))
+        var query = _db.ArchivedFlights.AsEnumerable();
+
+        if (!string.IsNullOrWhiteSpace(SearchText))
         {
-            var filtered = _db.ArchivedFlights
-                .Where(f => f.CanceledAt >= from && f.CanceledAt <= to)
-                .ToList();
-
-            ArchivedFlights = new ObservableCollection<ArchivedFlight>(filtered);
+            var term = SearchText.Trim().ToLowerInvariant();
+            query = query.Where(f =>
+                f.FlightCode.ToLowerInvariant().Contains(term) ||
+                f.Destination.ToLowerInvariant().Contains(term) ||
+                (f.CancellationReason?.ToLowerInvariant().Contains(term) ?? false));
         }
+
+        if (FromDate.HasValue)
+            query = query.Where(f => f.CanceledAt.Date >= FromDate.Value.Date);
+
+        if (ToDate.HasValue)
+            query = query.Where(f => f.CanceledAt.Date <= ToDate.Value.Date);
+
+        ArchivedFlights = new ObservableCollection<ArchivedFlight>(query);
     }
 
     [RelayCommand]
-    private void DeletePermanently(ArchivedFlight flight)
-    {
-        _db.ArchivedFlights.Remove(flight);
-        ArchivedFlights = new ObservableCollection<ArchivedFlight>(_db.ArchivedFlights);
-    }
+    private void Filter() => ApplyFilter();
 
     [RelayCommand]
     private void ResetFilter()
     {
-        FromDate = DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd");
-        ToDate = DateTime.Now.ToString("yyyy-MM-dd");
-        LoadArchivedFlights();
+        SearchText = string.Empty;
+        FromDate = DateTime.Now.AddMonths(-6);
+        ToDate = DateTime.Now;
+        ApplyFilter();
     }
 }

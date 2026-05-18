@@ -16,4 +16,6 @@ public class ArchivedFlight
     public int DayOfWeek { get; set; }
     public DateTime CanceledAt { get; set; } = DateTime.UtcNow;
     public string? CancellationReason { get; set; }
+    public int? DepartureAirportId { get; set; }
+    public int? DestinationAirportId { get; set; }
 }
