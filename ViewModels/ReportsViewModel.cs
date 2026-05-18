@@ -5,8 +5,18 @@ using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
+using Stimulsoft.Base.Drawing;
+using Stimulsoft.Report;
+using Stimulsoft.Report.Components;
+using Stimulsoft.Report.Viewer.Avalonia.Viewer;
 
 namespace AirportFlightManagement.ViewModels;
 
@@ -15,26 +25,19 @@ public partial class ReportsViewModel : ViewModelBase
     private readonly DatabaseService _db = DatabaseService.Instance;
     private readonly ExportService _exportService = new();
 
-    [ObservableProperty]
-    private ObservableCollection<ReportOption> reportOptions = new();
+    [ObservableProperty] private ObservableCollection<ReportOption> reportOptions = new();
 
-    [ObservableProperty]
-    private ReportOption? selectedReport;
+    [ObservableProperty] private ReportOption? selectedReport;
 
-    [ObservableProperty]
-    private ObservableCollection<Flight> previewData = new();
+    [ObservableProperty] private ObservableCollection<Flight> previewData = new();
 
-    [ObservableProperty]
-    private string? destinationFilter = "";
+    [ObservableProperty] private string? destinationFilter = "";
 
-    [ObservableProperty]
-    private string? selectedDestination;
+    [ObservableProperty] private string? selectedDestination;
 
-    [ObservableProperty]
-    private bool showDestinationInput = false;
+    [ObservableProperty] private bool showDestinationInput = false;
 
-    [ObservableProperty]
-    private ObservableCollection<string> availableDestinations = new();
+    [ObservableProperty] private ObservableCollection<string> availableDestinations = new();
 
     public ReportsViewModel()
     {
@@ -47,10 +50,10 @@ public partial class ReportsViewModel : ViewModelBase
     {
         AvailableDestinations.Clear();
         foreach (var destination in _db.Flights
-            .Where(f => f.DestinationAirport != null)
-            .Select(f => f.DestinationAirport!.Name)
-            .Distinct()
-            .OrderBy(d => d))
+                     .Where(f => f.DestinationAirport != null)
+                     .Select(f => f.DestinationAirport!.Name)
+                     .Distinct()
+                     .OrderBy(d => d))
         {
             AvailableDestinations.Add(destination);
         }
@@ -59,9 +62,11 @@ public partial class ReportsViewModel : ViewModelBase
     private void InitializeReports()
     {
         ReportOptions.Clear();
-        ReportOptions.Add(new ReportOption { Id = 1, Title = "📅 Monday Schedule", Description = "All flights for Monday" });
+        ReportOptions.Add(new ReportOption
+            { Id = 1, Title = "📅 Monday Schedule", Description = "All flights for Monday" });
         ReportOptions.Add(new ReportOption { Id = 2, Title = "💺 Available Seats", Description = "Seats per flight" });
-        ReportOptions.Add(new ReportOption { Id = 3, Title = "⏱️  Longest Flight", Description = "Flight with longest duration" });
+        ReportOptions.Add(new ReportOption
+            { Id = 3, Title = "⏱️  Longest Flight", Description = "Flight with longest duration" });
         ReportOptions.Add(new ReportOption { Id = 4, Title = "💰 Average Price", Description = "By destination" });
         ReportOptions.Add(new ReportOption { Id = 5, Title = "✈️  Planes at Airport", Description = "Current planes" });
     }
@@ -101,13 +106,14 @@ public partial class ReportsViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void ExportToExcel()
+    private async void ExportToExcel()
     {
         if (SelectedReport == null)
             return;
 
         var filePath = _exportService.ExportToExcel(PreviewData.ToList(), SelectedReport.Title);
-        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo { FileName = filePath, UseShellExecute = true });
+        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+            { FileName = filePath, UseShellExecute = true });
     }
 
     [RelayCommand]
@@ -117,13 +123,44 @@ public partial class ReportsViewModel : ViewModelBase
             return;
 
         var filePath = _exportService.ExportToWord(PreviewData.ToList(), SelectedReport.Title);
-        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo { FileName = filePath, UseShellExecute = true });
+        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+            { FileName = filePath, UseShellExecute = true });
     }
-}
 
-public class ReportOption
-{
-    public int Id { get; set; }
-    public required string Title { get; set; }
-    public required string Description { get; set; }
+    [RelayCommand]
+    private async Task ExportCommand()
+    {
+        if (SelectedReport == null || PreviewData.Count == 0)
+            return;
+
+        var filePath = _exportService.ExportToStiReport(PreviewData.ToList(), SelectedReport.Title);
+
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop &&
+            desktop.MainWindow != null)
+        {
+            var report = new StiReport();
+            report.Load(filePath);
+
+            var window = new Window
+            {
+                WindowState = WindowState.Maximized,
+                Width = 800,
+                Height = 600,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                Content = new StiViewerControl
+                {
+                    Report = report
+                }
+            };
+
+            await window.ShowDialog<bool?>(desktop.MainWindow);
+        }
+    }
+    
+    public class ReportOption
+    {
+        public int Id { get; set; }
+        public required string Title { get; set; }
+        public required string Description { get; set; }
+    }
 }

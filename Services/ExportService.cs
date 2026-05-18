@@ -7,10 +7,25 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
+using CommunityToolkit.Mvvm.Input;
+using Stimulsoft.Report;
+using Stimulsoft.Report.Viewer.Avalonia.Viewer;
+using Stimulsoft.Report;
+using Stimulsoft.Report.Components;
+using Stimulsoft.Report.Viewer.Avalonia.Viewer;
+using System.Data;
+using Avalonia.Controls;
+using Avalonia;
+using System.Drawing;
+using Stimulsoft.Base.Drawing;
 
 namespace AirportFlightManagement.Services;
 
-public class ExportService
+public partial class ExportService
 {
     public string ExportToExcel(List<Flight> flights, string reportName)
     {
@@ -100,4 +115,68 @@ public class ExportService
 
         return filePath;
     }
+    
+    public string ExportToStiReport(List<Flight> flights, string reportName)
+{
+    // 1. Create DataTable from flights
+    DataTable flightTable = new DataTable("Flights");
+    flightTable.Columns.Add("FlightCode", typeof(string));
+    flightTable.Columns.Add("Destination", typeof(string));
+    flightTable.Columns.Add("DepartureDate", typeof(DateTime));
+    flightTable.Columns.Add("DepartureTime", typeof(TimeSpan));
+    flightTable.Columns.Add("ArrivalTime", typeof(TimeSpan));
+    flightTable.Columns.Add("TicketPrice", typeof(decimal));
+    flightTable.Columns.Add("TotalSeats", typeof(int));
+    flightTable.Columns.Add("AvailableSeats", typeof(int));
+    flightTable.Columns.Add("Status", typeof(string));
+
+    foreach (var f in flights)
+    {
+        flightTable.Rows.Add(f.FlightCode, f.Destination, f.DepartureDate, f.DepartureTime,
+            f.ArrivalTime, f.TicketPrice, f.TotalSeats, f.AvailableSeats, f.Status);
+    }
+
+    // 2. Create DataSet and register
+    DataSet flightDataSet = new DataSet();
+    flightDataSet.Tables.Add(flightTable);
+
+    var report = new StiReport();
+    report.RegData(flightDataSet);
+    report.Dictionary.Synchronize();
+
+    var page = report.Pages[0];
+
+    // 3. Create a simple DataBand
+    var dataBand = new StiDataBand
+    {
+        DataSourceName = "Flights",
+        Height = 0.5,
+        Name = "DataBand"
+    };
+    page.Components.Add(dataBand);
+
+    var dataText = new StiText(new RectangleD(0, 0, 10, 0.5))
+    {
+        Text = "{Line}. {Flights.FlightCode} | {Flights.Origin} -> {Flights.Destination} | {Flights.DepartureDate} {Flights.DepartureTime} - {Flights.ArrivalTime} | ${Flights.TicketPrice}",
+        Name = "DataText"
+    };
+    dataBand.Components.Add(dataText);
+
+    // 4. Footer with total count
+    var footerBand = new StiFooterBand { Height = 0.5, Name = "FooterBand" };
+    page.Components.Add(footerBand);
+    var footerText = new StiText(new RectangleD(0, 0, 10, 0.5))
+    {
+        Text = "Count - {Count()}",
+        HorAlignment = StiTextHorAlignment.Right
+    };
+    footerBand.Components.Add(footerText);
+
+    // 5. Save as .mrt file in temp (optional)
+    string fileName = $"{reportName}_{DateTime.Now:yyyyMMdd_HHmmss}.mrt";
+    string filePath = Path.Combine(Path.GetTempPath(), fileName);
+    report.Save(filePath);
+
+    return filePath;
+}
 }
