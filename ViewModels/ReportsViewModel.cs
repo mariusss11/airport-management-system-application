@@ -101,7 +101,7 @@ public partial class ReportsViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void ExportToExcel()
+    private async void ExportToExcel()
     {
         if (SelectedReport == null)
             return;
