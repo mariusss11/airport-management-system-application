@@ -138,7 +138,7 @@ public class DatabaseService
             connection.Open();
             using (var cmd = connection.CreateCommand())
             {
-                cmd.CommandText = "SELECT f.id, f.flight_code, f.departure_time, f.arrival_time, f.plane_id, f.total_seats, f.available_seats, f.ticket_price, f.status, f.departure_date, f.departure_airport_id, a.id, a.name, a.code, f.destination_airport_id, da.id, da.name, da.code FROM flights f LEFT JOIN airports a ON f.departure_airport_id = a.id LEFT JOIN airports da ON f.destination_airport_id = da.id ORDER BY f.departure_date, f.departure_time";
+                cmd.CommandText = "SELECT f.id, f.flight_code, f.departure_time, f.arrival_time, f.plane_id, f.total_seats, f.available_seats, f.ticket_price, f.status, f.departure_date, f.departure_airport_id, a.id, a.name, a.code, f.destination_airport_id, da.id, da.name, da.code, a.city, a.country, da.city, da.country FROM flights f LEFT JOIN airports a ON f.departure_airport_id = a.id LEFT JOIN airports da ON f.destination_airport_id = da.id ORDER BY f.departure_date, f.departure_time";
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -165,7 +165,9 @@ public class DatabaseService
                             {
                                 Id = reader.GetInt32(11),
                                 Name = reader.GetString(12),
-                                Code = reader.GetString(13)
+                                Code = reader.GetString(13),
+                                City = reader.IsDBNull(18) ? "" : reader.GetString(18),
+                                Country = reader.IsDBNull(19) ? "" : reader.GetString(19)
                             };
                         }
 
@@ -175,7 +177,9 @@ public class DatabaseService
                             {
                                 Id = reader.GetInt32(15),
                                 Name = reader.GetString(16),
-                                Code = reader.GetString(17)
+                                Code = reader.GetString(17),
+                                City = reader.IsDBNull(20) ? "" : reader.GetString(20),
+                                Country = reader.IsDBNull(21) ? "" : reader.GetString(21)
                             };
                         }
 

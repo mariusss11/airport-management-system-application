@@ -8,20 +8,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Data;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using CommunityToolkit.Mvvm.Input;
-using Stimulsoft.Report;
-using Stimulsoft.Report.Viewer.Avalonia.Viewer;
+using Stimulsoft.Base.Drawing;
 using Stimulsoft.Report;
 using Stimulsoft.Report.Components;
 using Stimulsoft.Report.Viewer.Avalonia.Viewer;
-using System.Data;
-using Avalonia.Controls;
-using Avalonia;
-using System.Drawing;
-using Stimulsoft.Base.Drawing;
 
 namespace AirportFlightManagement.Services;
 
@@ -38,17 +33,16 @@ public partial class ExportService
 
             // Add headers
             worksheet.Cell(1, 1).Value = "Flight Code";
-            worksheet.Cell(1, 4).Value = "Departure";
-            worksheet.Cell(1, 2).Value = "Destination";
-            worksheet.Cell(1, 5).Value = "Departure Date";
-            worksheet.Cell(1, 5).Value = "Departure Time";
+            worksheet.Cell(1, 2).Value = "Departure Airport";
+            worksheet.Cell(1, 3).Value = "Departure Date";
+            worksheet.Cell(1, 4).Value = "Departure Time";
             worksheet.Cell(1, 5).Value = "Arrival Time";
             worksheet.Cell(1, 6).Value = "Total Seats";
             worksheet.Cell(1, 7).Value = "Available Seats";
             worksheet.Cell(1, 8).Value = "Price ($)";
 
             // Style header row
-            var headerRange = worksheet.Range("A1:I1");
+            var headerRange = worksheet.Range("A1:H1");
             headerRange.Style.Fill.BackgroundColor = XLColor.FromArgb(0xDC143C);
             headerRange.Style.Font.Bold = true;
             headerRange.Style.Font.FontColor = XLColor.White;
@@ -59,18 +53,17 @@ public partial class ExportService
             {
                 worksheet.Cell(row, 1).Value = flight.FlightCode;
                 worksheet.Cell(row, 2).Value = flight.DepartureAirport.Name;
-                worksheet.Cell(row, 3).Value = flight.DestinationAirport.Name;
-                worksheet.Cell(row, 4).Value = flight.DepartureDate.ToString("dddd");
-                worksheet.Cell(row, 5).Value = flight.DepartureTime.ToString("HH:mm");
-                worksheet.Cell(row, 6).Value = flight.ArrivalTime.ToString("HH:mm");
-                worksheet.Cell(row, 7).Value = flight.TotalSeats;
-                worksheet.Cell(row, 8).Value = flight.AvailableSeats;
-                worksheet.Cell(row, 9).Value = flight.TicketPrice;
+                worksheet.Cell(row, 3).Value = flight.DepartureDate.ToString("yyyy MMMM dd");
+                worksheet.Cell(row, 4).Value = flight.DepartureTime.ToString("HH:mm");
+                worksheet.Cell(row, 5).Value = flight.ArrivalTime.ToString("HH:mm");
+                worksheet.Cell(row, 6).Value = flight.TotalSeats;
+                worksheet.Cell(row, 7).Value = flight.AvailableSeats;
+                worksheet.Cell(row, 8).Value = flight.TicketPrice;
 
                 // Alternate row colors
                 if (row % 2 == 0)
                 {
-                    worksheet.Range($"A{row}:I{row}").Style.Fill.BackgroundColor = XLColor.Gray;
+                    worksheet.Range($"A{row}:H{row}").Style.Fill.BackgroundColor = XLColor.Gray;
                 }
 
                 row++;
@@ -121,10 +114,11 @@ public partial class ExportService
     // 1. Create DataTable from flights
     DataTable flightTable = new DataTable("Flights");
     flightTable.Columns.Add("FlightCode", typeof(string));
+    flightTable.Columns.Add("Origin", typeof(string));
     flightTable.Columns.Add("Destination", typeof(string));
-    flightTable.Columns.Add("DepartureDate", typeof(DateTime));
-    flightTable.Columns.Add("DepartureTime", typeof(TimeSpan));
-    flightTable.Columns.Add("ArrivalTime", typeof(TimeSpan));
+    flightTable.Columns.Add("DepartureDate", typeof(string));
+    flightTable.Columns.Add("DepartureTime", typeof(string));
+    flightTable.Columns.Add("ArrivalTime", typeof(string));
     flightTable.Columns.Add("TicketPrice", typeof(decimal));
     flightTable.Columns.Add("TotalSeats", typeof(int));
     flightTable.Columns.Add("AvailableSeats", typeof(int));
@@ -132,8 +126,17 @@ public partial class ExportService
 
     foreach (var f in flights)
     {
-        flightTable.Rows.Add(f.FlightCode, f.Destination, f.DepartureDate, f.DepartureTime,
-            f.ArrivalTime, f.TicketPrice, f.TotalSeats, f.AvailableSeats, f.Status);
+        flightTable.Rows.Add(
+            f.FlightCode,
+            f.DepartureAirport?.Name ?? "Unknown",
+            f.Destination,
+            f.DepartureDate.ToString("yyyy-MM-dd"),
+            f.DepartureTime.ToString("HH:mm"),
+            f.ArrivalTime.ToString("HH:mm"),
+            f.TicketPrice,
+            f.TotalSeats,
+            f.AvailableSeats,
+            f.Status);
     }
 
     // 2. Create DataSet and register

@@ -66,7 +66,8 @@
                                    Foreground="#FFFFFF" FontWeight="Bold" />
                         <TextBlock Text="{Binding LongestFlight.FlightCode}" Foreground="#E0E0E0" FontSize="12"
                                    Opacity="0.9" />
-                        <TextBlock Text="{Binding LongestFlight.DepartureAirport.Name, StringFormat='From {0}'}" FontSize="18"
+                        <TextBlock Text="{Binding LongestFlight.DepartureAirport.Name, StringFormat='From {0}'}"
+                                   FontSize="18"
                                    Foreground="#FFFFFF" FontWeight="Bold" />
                         <TextBlock Text="{Binding LongestFlight.Destination, StringFormat='To {0}'}" FontSize="18"
                                    Foreground="#FFFFFF" FontWeight="Bold" />
@@ -81,79 +82,82 @@
             </Border>
 
             <!-- Today's Flights Table -->
-            <TextBlock Text="Today's Flights" FontSize="18" FontWeight="Bold"
-                       Foreground="{DynamicResource TextPrimary}" />
-            <ItemsControl ItemsSource="{Binding PagedFlights}">
-                <ItemsControl.ItemTemplate>
+            <StackPanel IsVisible="{Binding HasFlights}">
+                <TextBlock Text="Today's Flights" FontSize="18" FontWeight="Bold"
+                           Foreground="{DynamicResource TextPrimary}" />
+                <ItemsControl ItemsSource="{Binding PagedFlights}">
+                    <ItemsControl.ItemTemplate>
 
-                    <DataTemplate>
-                        <Border Background="{DynamicResource SurfaceBackground}"
-                                BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4"
-                                Padding="15" Margin="0,8">
-                            <Grid ColumnDefinitions="*, auto" ColumnSpacing="15">
-                                <StackPanel Spacing="8">
-                                    <TextBlock Text="{Binding Flight}"></TextBlock>
-                                    <TextBlock Text="{Binding FlightCode}" FontSize="16" FontWeight="Bold"
-                                               Foreground="{DynamicResource AccentBrush}" />
-                                    <StackPanel Orientation="Horizontal" Spacing="20">
-                                        <StackPanel Spacing="2">
-                                            <TextBlock Text="Departure" Foreground="{DynamicResource TextMuted}"
-                                                       FontSize="11" />
-                                            <TextBlock Text="{Binding DepartureAirport.Name}"
-                                                       Foreground="{DynamicResource TextSecondary}" FontSize="12" />
-                                        </StackPanel>
-                                        <StackPanel Spacing="2">
-                                            <TextBlock Text="Destination" Foreground="{DynamicResource TextMuted}"
-                                                       FontSize="11" />
-                                            <TextBlock Text="{Binding Destination}"
-                                                       Foreground="{DynamicResource TextSecondary}" FontSize="12" />
-                                        </StackPanel>
-                                        <StackPanel Spacing="2">
-                                            <TextBlock Text="Date" Foreground="{DynamicResource TextMuted}"
-                                                       FontSize="11" />
-                                            <TextBlock Text="{Binding DepartureDate, StringFormat='dd MMM yyyy'}"
-                                                       Foreground="{DynamicResource TextSecondary}" FontSize="12" />
-                                        </StackPanel>
-                                        <StackPanel Spacing="2">
-                                            <TextBlock Text="Departure" Foreground="{DynamicResource TextMuted}"
-                                                       FontSize="11" />
-                                            <TextBlock Text="{Binding DepartureTime, StringFormat='HH:mm'}"
-                                                       Foreground="{DynamicResource TextSecondary}" FontSize="12" />
-                                        </StackPanel>
-                                        <StackPanel Spacing="2">
-                                            <TextBlock Text="Arrival" Foreground="{DynamicResource TextMuted}"
-                                                       FontSize="11" />
-                                            <TextBlock Text="{Binding ArrivalTime, StringFormat='HH:mm'}"
-                                                       Foreground="{DynamicResource TextSecondary}" FontSize="12" />
-                                        </StackPanel>
-                                        <StackPanel Spacing="2">
-                                            <TextBlock Text="Price" Foreground="{DynamicResource TextMuted}"
-                                                       FontSize="11" />
-                                            <TextBlock Text="{Binding TicketPrice, StringFormat='${0}'}"
-                                                       Foreground="{DynamicResource TextSecondary}" FontSize="12" />
-                                        </StackPanel>
-                                        <StackPanel Spacing="2">
-                                            <TextBlock Text="Duration" Foreground="{DynamicResource TextMuted}"
-                                                       FontSize="11" />
-                                            <TextBlock Text="{Binding DurationFormatted}"
-                                                       Foreground="{DynamicResource TextSecondary}" FontSize="12" />
+                        <DataTemplate>
+                            <Border Background="{DynamicResource SurfaceBackground}"
+                                    BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4"
+                                    Padding="15" Margin="0,8">
+                                <Grid ColumnDefinitions="*, auto" ColumnSpacing="15">
+                                    <StackPanel Spacing="8">
+                                        <TextBlock Text="{Binding Flight}"></TextBlock>
+                                        <TextBlock Text="{Binding FlightCode}" FontSize="16" FontWeight="Bold"
+                                                   Foreground="{DynamicResource AccentBrush}" />
+                                        <StackPanel Orientation="Horizontal" Spacing="20">
+                                            <StackPanel Spacing="2">
+                                                <TextBlock Text="Departure" Foreground="{DynamicResource TextMuted}"
+                                                           FontSize="11" />
+                                                <TextBlock Text="{Binding DepartureAirport.Name}"
+                                                           Foreground="{DynamicResource TextSecondary}" FontSize="12" />
+                                            </StackPanel>
+                                            <StackPanel Spacing="2">
+                                                <TextBlock Text="Destination" Foreground="{DynamicResource TextMuted}"
+                                                           FontSize="11" />
+                                                <TextBlock Text="{Binding Destination}"
+                                                           Foreground="{DynamicResource TextSecondary}" FontSize="12" />
+                                            </StackPanel>
+                                            <StackPanel Spacing="2">
+                                                <TextBlock Text="Date" Foreground="{DynamicResource TextMuted}"
+                                                           FontSize="11" />
+                                                <TextBlock Text="{Binding DepartureDate, StringFormat='dd MMM yyyy'}"
+                                                           Foreground="{DynamicResource TextSecondary}" FontSize="12" />
+                                            </StackPanel>
+                                            <StackPanel Spacing="2">
+                                                <TextBlock Text="Departure" Foreground="{DynamicResource TextMuted}"
+                                                           FontSize="11" />
+                                                <TextBlock Text="{Binding DepartureTime, StringFormat='HH:mm'}"
+                                                           Foreground="{DynamicResource TextSecondary}" FontSize="12" />
+                                            </StackPanel>
+                                            <StackPanel Spacing="2">
+                                                <TextBlock Text="Arrival" Foreground="{DynamicResource TextMuted}"
+                                                           FontSize="11" />
+                                                <TextBlock Text="{Binding ArrivalTime, StringFormat='HH:mm'}"
+                                                           Foreground="{DynamicResource TextSecondary}" FontSize="12" />
+                                            </StackPanel>
+                                            <StackPanel Spacing="2">
+                                                <TextBlock Text="Price" Foreground="{DynamicResource TextMuted}"
+                                                           FontSize="11" />
+                                                <TextBlock Text="{Binding TicketPrice, StringFormat='${0}'}"
+                                                           Foreground="{DynamicResource TextSecondary}" FontSize="12" />
+                                            </StackPanel>
+                                            <StackPanel Spacing="2">
+                                                <TextBlock Text="Duration" Foreground="{DynamicResource TextMuted}"
+                                                           FontSize="11" />
+                                                <TextBlock Text="{Binding DurationFormatted}"
+                                                           Foreground="{DynamicResource TextSecondary}" FontSize="12" />
+                                            </StackPanel>
                                         </StackPanel>
                                     </StackPanel>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-            
-            <!-- Pagination -->
-            <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center" Margin="0,20,0,0">
-                <Button Content="Previous" Command="{Binding PreviousPageCommand}" Width="100" HorizontalContentAlignment="Center"/>
-                <TextBlock Text="{Binding CurrentPage}" Foreground="{DynamicResource TextPrimary}" VerticalAlignment="Center" FontSize="14" Margin="10,0"/>
-                <Button Content="Next" Command="{Binding NextPageCommand}" Width="100" HorizontalContentAlignment="Center"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <!-- Pagination -->
+                <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center" Margin="0,20,0,0">
+                    <Button Content="Previous" Command="{Binding PreviousPageCommand}" Width="100"
+                            HorizontalContentAlignment="Center" />
+                    <TextBlock Text="{Binding CurrentPage}" Foreground="{DynamicResource TextPrimary}"
+                               VerticalAlignment="Center" FontSize="14" Margin="10,0" />
+                    <Button Content="Next" Command="{Binding NextPageCommand}" Width="100"
+                            HorizontalContentAlignment="Center" />
+                </StackPanel>
             </StackPanel>
-
-
         </StackPanel>
     </ScrollViewer>
 
