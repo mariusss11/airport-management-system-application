@@ -8,6 +8,5 @@ public partial class ReportsView : UserControl
     public ReportsView()
     {
         InitializeComponent();
-        DataContext = new ReportsViewModel();
     }
 }

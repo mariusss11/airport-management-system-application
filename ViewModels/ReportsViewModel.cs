@@ -110,8 +110,11 @@ public partial class ReportsViewModel : ViewModelBase
     {
         if (SelectedReport == null)
             return;
+        
+        
 
-        var filePath = _exportService.ExportToExcel(PreviewData.ToList(), SelectedReport.Title);
+
+        var filePath = _exportService.ExportToExcel(_db.Flights.ToList(), SelectedReport.Title);
         System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
             { FileName = filePath, UseShellExecute = true });
     }
