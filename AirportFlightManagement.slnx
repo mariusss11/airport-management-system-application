@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="AirportFlightManagement.csproj" />
+  <Project Path="AirportFlightManagement.Tests/AirportFlightManagement.Tests.csproj" />
+</Solution>
