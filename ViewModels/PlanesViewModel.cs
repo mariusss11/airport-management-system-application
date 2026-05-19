@@ -16,7 +16,7 @@ public partial class PlanesViewModel : ViewModelBase
     private readonly DatabaseService _db = DatabaseService.Instance;
     private List<Plane> _filteredPlanes = [];
     private int? _editingId;
-    private const int PageSize = 8;
+    private const int PageSize = 5;
 
     [ObservableProperty]
     private ObservableCollection<Plane> pagedPlanes = [];

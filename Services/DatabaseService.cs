@@ -185,7 +185,7 @@ public class DatabaseService
             }
         }
     }
-
+    
     private void LoadArchivedFlights()
     {
         ArchivedFlights.Clear();

@@ -38,14 +38,14 @@ public partial class ExportService
 
             // Add headers
             worksheet.Cell(1, 1).Value = "Flight Code";
-            worksheet.Cell(1, 2).Value = "Destination";
-            worksheet.Cell(1, 3).Value = "Day";
             worksheet.Cell(1, 4).Value = "Departure";
-            worksheet.Cell(1, 5).Value = "Arrival";
-            worksheet.Cell(1, 6).Value = "Seats";
-            worksheet.Cell(1, 7).Value = "Available";
-            worksheet.Cell(1, 8).Value = "Price (€)";
-            worksheet.Cell(1, 9).Value = "Status";
+            worksheet.Cell(1, 2).Value = "Destination";
+            worksheet.Cell(1, 5).Value = "Departure Date";
+            worksheet.Cell(1, 5).Value = "Departure Time";
+            worksheet.Cell(1, 5).Value = "Arrival Time";
+            worksheet.Cell(1, 6).Value = "Total Seats";
+            worksheet.Cell(1, 7).Value = "Available Seats";
+            worksheet.Cell(1, 8).Value = "Price ($)";
 
             // Style header row
             var headerRange = worksheet.Range("A1:I1");
@@ -58,19 +58,19 @@ public partial class ExportService
             foreach (var flight in flights)
             {
                 worksheet.Cell(row, 1).Value = flight.FlightCode;
-                worksheet.Cell(row, 2).Value = flight.Destination;
-                worksheet.Cell(row, 3).Value = flight.DepartureDate.ToString("dddd");
-                worksheet.Cell(row, 4).Value = flight.DepartureTime.ToString("HH:mm");
-                worksheet.Cell(row, 5).Value = flight.ArrivalTime.ToString("HH:mm");
-                worksheet.Cell(row, 6).Value = flight.TotalSeats;
-                worksheet.Cell(row, 7).Value = flight.AvailableSeats;
-                worksheet.Cell(row, 8).Value = flight.TicketPrice;
-                worksheet.Cell(row, 9).Value = flight.Status;
+                worksheet.Cell(row, 2).Value = flight.DepartureAirport.Name;
+                worksheet.Cell(row, 3).Value = flight.DestinationAirport.Name;
+                worksheet.Cell(row, 4).Value = flight.DepartureDate.ToString("dddd");
+                worksheet.Cell(row, 5).Value = flight.DepartureTime.ToString("HH:mm");
+                worksheet.Cell(row, 6).Value = flight.ArrivalTime.ToString("HH:mm");
+                worksheet.Cell(row, 7).Value = flight.TotalSeats;
+                worksheet.Cell(row, 8).Value = flight.AvailableSeats;
+                worksheet.Cell(row, 9).Value = flight.TicketPrice;
 
                 // Alternate row colors
                 if (row % 2 == 0)
                 {
-                    worksheet.Range($"A{row}:I{row}").Style.Fill.BackgroundColor = XLColor.FromArgb(0x1A1F3A);
+                    worksheet.Range($"A{row}:I{row}").Style.Fill.BackgroundColor = XLColor.Gray;
                 }
 
                 row++;

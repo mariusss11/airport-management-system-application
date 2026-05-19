@@ -15,7 +15,7 @@ public partial class AirportsViewModel : ViewModelBase
     private readonly DatabaseService _db = DatabaseService.Instance;
     private List<Airport> _filteredAirports = [];
     private int? _editingId;
-    private const int PageSize = 8;
+    private const int PageSize = 5;
 
     [ObservableProperty]
     private ObservableCollection<Airport> pagedAirports = [];

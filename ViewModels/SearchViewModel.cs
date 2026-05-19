@@ -14,7 +14,7 @@ public partial class SearchViewModel : ViewModelBase
 {
     private readonly DatabaseService _db = DatabaseService.Instance;
     private List<Flight> _filteredResults = [];
-    private const int PageSize = 8;
+    private const int PageSize = 5;
 
     [ObservableProperty]
     private string departureLocation = "";
