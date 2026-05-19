@@ -50,7 +50,9 @@ public partial class LoginViewModel : ViewModelBase
         }
         else
         {
-            ErrorMessage = _authService.LastLoginError ?? DatabaseService.Instance.LastError ?? "Invalid username or password";
+            ErrorMessage = DatabaseService.Instance.LastError != null
+                ? "Unable to connect to the database. Please try again later."
+                : "Invalid username or password.";
             Password = "";
         }
 

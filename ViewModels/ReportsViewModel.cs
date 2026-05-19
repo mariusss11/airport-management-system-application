@@ -39,6 +39,10 @@ public partial class ReportsViewModel : ViewModelBase
 
     [ObservableProperty] private ObservableCollection<string> availableDestinations = new();
 
+    [ObservableProperty] private string destinationError = "";
+
+    public bool CanExport => SelectedReport != null && (!ShowDestinationInput || !string.IsNullOrWhiteSpace(SelectedDestination));
+
     public ReportsViewModel()
     {
         _db.RefreshFlights();
@@ -62,20 +66,22 @@ public partial class ReportsViewModel : ViewModelBase
     private void InitializeReports()
     {
         ReportOptions.Clear();
-        ReportOptions.Add(new ReportOption
-            { Id = 1, Title = "📅 Monday Schedule", Description = "All flights for Monday" });
-        ReportOptions.Add(new ReportOption { Id = 2, Title = "💺 Available Seats", Description = "Seats per flight" });
-        ReportOptions.Add(new ReportOption
-            { Id = 3, Title = "⏱️  Longest Flight", Description = "Flight with longest duration" });
-        ReportOptions.Add(new ReportOption { Id = 4, Title = "💰 Average Price", Description = "By destination" });
-        ReportOptions.Add(new ReportOption { Id = 5, Title = "✈️  Planes at Airport", Description = "Current planes" });
+        ReportOptions.Add(new ReportOption { Id = 1, Title = "All Flights", Description = "By destination" });
     }
 
-    [RelayCommand]
-    private void SelectReport(ReportOption report)
+    partial void OnSelectedReportChanged(ReportOption? value)
     {
-        SelectedReport = report;
-        ShowDestinationInput = report.Id == 4;
+        ShowDestinationInput = value?.Id == 1;
+        SelectedDestination = null;
+        DestinationError = "";
+        OnPropertyChanged(nameof(CanExport));
+        RefreshPreview();
+    }
+
+    partial void OnSelectedDestinationChanged(string? value)
+    {
+        DestinationError = "";
+        OnPropertyChanged(nameof(CanExport));
         RefreshPreview();
     }
 
@@ -87,21 +93,18 @@ public partial class ReportsViewModel : ViewModelBase
         if (SelectedReport == null)
             return;
 
+        if (ShowDestinationInput && string.IsNullOrWhiteSpace(SelectedDestination))
+            return;
+
         List<Flight> data = SelectedReport.Id switch
         {
-            1 => _db.GetFlightsByDay(1).ToList(), // Monday
-            2 => _db.Flights.ToList(),
-            3 => _db.GetLongestFlight() is Flight longest ? new List<Flight> { longest } : new List<Flight>(),
-            4 => string.IsNullOrWhiteSpace(SelectedDestination)
-                ? new List<Flight>()
-                : _db.GetFlightsByDestination(SelectedDestination).ToList(),
-            5 => _db.Flights.Where(f => _db.Planes.Any(p => p.Id == f.PlaneId && p.AtAirport)).ToList(),
+            1 => _db.GetFlightsByDestination(SelectedDestination!).ToList(),
             _ => new List<Flight>()
         };
 
-        foreach (var flight in data.OrderBy(f => f.DepartureDate).ThenBy(f => f.DepartureTime))
+        foreach (var item in data)
         {
-            PreviewData.Add(flight);
+            PreviewData.Add(item);
         }
     }
 
@@ -110,11 +113,16 @@ public partial class ReportsViewModel : ViewModelBase
     {
         if (SelectedReport == null)
             return;
-        
-        
 
+        if (ShowDestinationInput && string.IsNullOrWhiteSpace(SelectedDestination))
+        {
+            DestinationError = "Please select a destination before exporting.";
+            return;
+        }
 
-        var filePath = _exportService.ExportToExcel(_db.Flights.ToList(), SelectedReport.Title);
+        RefreshPreview();
+        
+        var filePath = _exportService.ExportToExcel(PreviewData.ToList(), SelectedReport.Title);
         System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
             { FileName = filePath, UseShellExecute = true });
     }
@@ -125,39 +133,15 @@ public partial class ReportsViewModel : ViewModelBase
         if (SelectedReport == null)
             return;
 
+        if (ShowDestinationInput && string.IsNullOrWhiteSpace(SelectedDestination))
+        {
+            DestinationError = "Please select a destination before exporting.";
+            return;
+        }
+
         var filePath = _exportService.ExportToWord(PreviewData.ToList(), SelectedReport.Title);
         System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
             { FileName = filePath, UseShellExecute = true });
-    }
-
-    [RelayCommand]
-    private async Task ExportCommand()
-    {
-        if (SelectedReport == null || PreviewData.Count == 0)
-            return;
-
-        var filePath = _exportService.ExportToStiReport(PreviewData.ToList(), SelectedReport.Title);
-
-        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop &&
-            desktop.MainWindow != null)
-        {
-            var report = new StiReport();
-            report.Load(filePath);
-
-            var window = new Window
-            {
-                WindowState = WindowState.Maximized,
-                Width = 800,
-                Height = 600,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                Content = new StiViewerControl
-                {
-                    Report = report
-                }
-            };
-
-            await window.ShowDialog<bool?>(desktop.MainWindow);
-        }
     }
     
     public class ReportOption

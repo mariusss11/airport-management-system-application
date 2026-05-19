@@ -43,6 +43,8 @@ public partial class DashboardViewModel : ViewModelBase
     [ObservableProperty]
     private ObservableCollection<Flight> pagedFlights = [];
     
+    public bool HasFlights => PagedFlights?.Count > 0;
+    
     public DashboardViewModel()
     {
         _db.RefreshAll();
@@ -74,6 +76,7 @@ public partial class DashboardViewModel : ViewModelBase
         var start = (CurrentPage - 1) * PageSize;
         var pageItems = TodayFlights.Skip(start).Take(PageSize).ToList();
         PagedFlights = new ObservableCollection<Flight>(pageItems);
+        ;
     }
     
     [RelayCommand]
